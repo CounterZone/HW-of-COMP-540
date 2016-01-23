@@ -1,6 +1,6 @@
 import numpy as np
 
-class LinearRegressor:
+class LinearRegressor_Multi:
 
     def __init__(self):
         self.theta = None
@@ -12,7 +12,8 @@ class LinearRegressor:
         Train a linear model using gradient descent.
         
         Inputs:
-        - X: 1-dimensional array of length N of training data. 
+        - X: N X D array of training data. Each training point is a D-dimensional
+         row.
         - y: 1-dimensional array of length N with values in the reals.
         - learning_rate: (float) learning rate for optimization.
         - num_iters: (integer) number of steps to take when optimizing
@@ -22,36 +23,31 @@ class LinearRegressor:
         A list containing the value of the loss function at each training iteration.
         """
     
-        J_history = []
-
-        # Initialize self.theta
+        num_train,dim = X.shape
         if self.theta is None:
             # lazily initialize theta 
-            self.theta = np.zeros((X.shape[1],))
+            self.theta = np.zeros((dim,))
 
         # Run gradient descent to find theta
+        J_history = []
         for i in xrange(num_iters):
             # evaluate loss and gradient
             loss, grad = self.loss(X, y)
-
-            # add loss to J_history
             J_history.append(loss)
 
+            # perform parameter update
             #########################################################################
             # TODO:                                                                 #
             # Update the parameters using the gradient and the learning rate.       #
-            #    One line of code expected                                          #
+            #   One line of code expected
             #########################################################################
-            
-            self.theta=self.theta-learning_rate*grad
 
 
             #########################################################################
             #                       END OF YOUR CODE                                #
             #########################################################################
 
-            # print loss every 1000 iterations
-            if verbose and i % 1000 == 0:
+            if verbose and i % 100 == 0:
                 print 'iteration %d / %d: loss %f' % (i, num_iters, loss)
 
         return J_history
@@ -62,7 +58,7 @@ class LinearRegressor:
         Subclasses will override this.
 
         Inputs:
-        - X: vector of length N with real values
+        - X: N x D array of data; each row is a data point.
         - y: 1-dimensional array of length N with real values.
 
         Returns: A tuple containing:
@@ -77,28 +73,44 @@ class LinearRegressor:
         data points.
 
         Inputs:
-        - X: vector of length N of training data. 
+        - X: N x D array of training data. Each row is a D-dimensional point.
 
         Returns:
         - y_pred: Predicted output for the data in X. y_pred is a 1-dimensional
         array of length N, and each element is a real number.
         """
         y_pred = np.zeros(X.shape[0])
+
         ###########################################################################
         # TODO:                                                                   #
         # Implement this method. Store the predicted outputs in y_pred.           #
-        #    One line of code expected                                            #
+        #  One line of code expected                                              #
         ###########################################################################
-        
-        y_pred=self.theta[1]*X+self.theta[0]
+
 
         ###########################################################################
         #                           END OF YOUR CODE                              #
         ###########################################################################
         return y_pred
-  
 
-class LinearReg_SquaredLoss(LinearRegressor):
+    def normal_equation(self,X,y):
+        """
+        Solve for self.theta using the normal equations.
+        """
+
+        ###########################################################################
+        # TODO:                                                                   #
+        # Solve for theta_n using the normal equation.                            #
+        #  One line of code expected                                              #
+        ###########################################################################
+
+        theta_n = np.zeros((X.shape[1],))
+
+        ###########################################################################
+
+        return theta_n
+
+class LinearReg_SquaredLoss(LinearRegressor_Multi):
     "A subclass of Linear Regressors that uses the squared error loss function """
 
     """
@@ -110,16 +122,16 @@ class LinearReg_SquaredLoss(LinearRegressor):
     """
 
     def loss (self,X,y):
+        num_examples,dim = X.shape
         J = 0
-        grad = np.zeros((2,))
+        grad = np.zeros((dim,))
         ###########################################################################
         # TODO:                                                                   #
         # Calculate J (loss) and grad (gradient) wrt to X,y, and self.theta.      #
-        #   2-4 lines of code expected                                            #
+        #  2-3 lines of code expected                                             #
         ###########################################################################
-	
-        J=((np.dot(self.theta,X.transpose())-y)**2).mean()/2
-        grad=np.dot((np.dot(self.theta,X.transpose())-y),X)/X.shape[0]
+
+
 
         ###########################################################################
         #                           END OF YOUR CODE                              #
