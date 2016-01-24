@@ -1,0 +1,170 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{savetrees}
+
+\begin{document}
+\title{Solution to Assignment 1}
+\author{Shoeb Mohammed and Zhuo Chen}
+\maketitle
+
+\section{Locally weighted linear regression}
+
+\begin{equation}
+  \label{eq:1.1}
+  J(\theta) = \frac{1}{2}\sum_{i=1}^m w^{(i)}(\theta^Tx^{(i)}-y^{(i)})^2
+\end{equation}
+
+\subsection{}
+
+Matrix $X$ and vectors $\theta$ , $y$ are
+\begin{equation}
+  \label{eq:1.2}
+  X =
+  \begin{bmatrix}
+    {x^{(i)}}^T \\
+    \vdots \\
+    {x^{(m)}}^T
+  \end{bmatrix}
+  ,
+  \theta =
+  \begin{bmatrix}
+    \theta_1 \\
+    \vdots \\
+    \theta_d
+  \end{bmatrix}
+  ,
+  y =
+  \begin{bmatrix}
+    y^{(i)} \\
+    \vdots \\
+    y^{(m)}
+  \end{bmatrix}
+\end{equation}
+
+Let $W$ be the $m \times m$ diagnoal matrix
+\begin{equation}
+  \label{eq:1.3}
+  W = \frac{1}{2}diag(w^{(1)},\cdots,w^{(m)})
+\end{equation}
+
+Using $(\ref{eq:1.2})$ and $(\ref{eq:1.3})$, equation~$(\ref{eq:1.1})$ can be written as
+\begin{equation}
+  \label{eq:1.4}
+  J(\theta) = (X\theta - y)^T W (X\theta - y)
+\end{equation}
+
+\subsection{}
+The normal equations for un-weighted linear regression are
+\begin{equation}
+  \label{eq:1.5}
+  X^T X \theta = X^T y
+\end{equation}
+Equation~\ref{eq:1.4} can be re-written as
+\begin{equation}
+  \label{eq:1.6}
+  \begin{split}
+    J(\theta) &= (X\theta - y)^T \sqrt{W}\sqrt{W} (X\theta - y)     \\
+    &= (\sqrt{W}X\theta - \sqrt{W}y)^T (\sqrt{W}X\theta - \sqrt{W}y) \\
+    &= (X'\theta - y')^T(X'\theta - y') \text{ where } X' = \sqrt{W}X \text{ and } y' = \sqrt{W}y
+  \end{split}
+\end{equation}
+Now, equation~\ref{eq:1.6} is similar to unweighted $J(\theta)$. Thus, using equation~\ref{eq:1.5}, $\theta$ in closed form is
+\begin{equation}
+  \label{eq:1.7}
+  \begin{split}
+    \theta &= \left[(\sqrt{W}X)^T(\sqrt{W}X)\right]^{-1} \left(\sqrt{W}X\right)^T \sqrt{W}y \\
+  \end{split}
+\end{equation}
+
+\subsection{}
+Locally weighted linear regression is a non-parametric model.
+To estimate $y$, given $x$
+
+\begin{itemize}
+\item first calculate the weights $w^{(i)}$. This gives the matrix $W$ as defined in equation~\ref{eq:1.3}
+\item Start with random guess for $\theta$
+  \item In the i\textsuperscript{th} iteration of the algorithm, the $\theta$ is updated using the relation
+    \begin{equation}
+      \label{eq:1.8}
+      \theta(i) \leftarrow \theta(i-1) - \alpha \left(\sqrt{W}X\right)^T \left(\sqrt{W}X\theta(i-1) - \sqrt{W}y\right)
+    \end{equation}
+\item The above step is repeated until $\theta$ converges
+\end{itemize}
+
+\section{Properties of the linear regression estimator}
+\subsection{}
+Vectors $y, \theta , \epsilon$ and matrix $X$ are related as
+\begin{equation}
+  \label{eq:1.9}
+  y = X \theta + \epsilon
+\end{equation}
+$\epsilon$ is i.i.d $N(0,\sigma^{2})$.
+
+Thus, for the optimal value $\theta^{*}$ and fixed $X$
+\begin{equation}
+  \label{eq:1.10}
+  \begin{split}
+    E[y] &= E[X\theta^{*}] + E[\epsilon]\\
+    &= E[X\theta^{*}] + 0\\
+    &= X\theta^{*}
+  \end{split}
+\end{equation}
+
+Given the normal equations
+\begin{equation}
+  \label{eq:1.11}
+  \begin{split}
+  \theta &= (X^T X)^{-1}X^T y \\
+  \implies E[\theta] &= (X^T X)^{-1}X^T E[y] \\
+  &= (X^T X)^{-1}X^T X\theta^{*} \\
+  &= \theta^{*}    
+  \end{split}
+\end{equation}
+
+\subsection{}
+\begin{equation}
+  \label{eq:1.12}
+  \begin{split}
+    Var(\theta) &= E\left[(\theta - E(\theta))(\theta - E(\theta))^T\right] \\
+    &= E\left[(\theta - \theta^*)(\theta - \theta^*)^T\right] \\
+    &= E[\theta \theta^T] - \theta^*{\theta^*}^T
+  \end{split}
+\end{equation}
+
+Use the normal equations (linear regression estimator) to get
+\begin{equation}
+  \label{eq:1.13}
+  \begin{split}
+    E[\theta\theta^T] &= E\left[ (X^TX)^{-1} X^T yy^T \left( (X^TX)^{-1} \right)^T \right] \\    
+    &= (X^TX)^{-1} X^T E[yy^T] \left( (X^TX)^{-1} \right)^T
+  \end{split}
+\end{equation}
+Use equation~\ref{eq:1.9} to get 
+\begin{equation}
+  \label{eq:1.14}
+  \begin{split}
+    E[yy^T] &= E[(X\theta + \epsilon) (X\theta + \epsilon) \\
+    &= E[X\theta^* {\theta^*}^T X^T + X\theta^*\epsilon^T + \epsilon {\theta^*}^T X^T + \epsilon\epsilon^T] \\
+    &= X\theta^* {\theta^*}^T X^T + E[\epsilon\epsilon^T] \\
+    &= X\theta^* {\theta^*}^T X^T + diag(\sigma^2) \\
+    &= X\theta^* {\theta^*}^T X^T + \sigma^2 I
+  \end{split}
+\end{equation}
+
+Equations~\ref{eq:1.13} and~\ref{eq:1.14} imply
+\begin{equation}
+  \label{eq:1.15}
+  \begin{split}
+    E[\theta\theta^T] &= (X^TX)^{-1} X^T \left[X\theta^* {\theta^*}^T X^T + \sigma^2 I \right] X\left( (X^TX)^{-1} \right)^T \\
+    &= \left[\theta^* {\theta^*}^T X^T + (X^TX)^{-1} X^T \sigma^2 I \right] X \left( (X^TX)^{-1} \right)^T \\ 
+    &= \theta^* {\theta^*}^T + (X^TX)^{-1} X^T \sigma^2 I X \left( (X^TX)^{-1} \right)^T \\
+    &= \theta^* {\theta^*}^T + \sigma^2 (X^TX)^{-1} X^T X \left( (X^TX)^{-1} \right)^T \\
+    &= \theta^* {\theta^*}^T + \sigma^2 (X^TX)^{-1}
+  \end{split}
+\end{equation}
+Equations~\ref{eq:1.12} and~\ref{eq:1.15} imply
+\begin{equation}
+  \label{eq:1.16}
+  Var(\theta) = \sigma^2 (X^TX)^{-1}
+\end{equation}
+\end{document}
