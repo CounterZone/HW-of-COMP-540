@@ -90,7 +90,7 @@ class LinearRegressor:
         #    One line of code expected                                            #
         ###########################################################################
         
-        y_pred=self.theta[1]*X+self.theta[0]
+        y_pred=np.dot(self.theta,X.transpose())
 
         ###########################################################################
         #                           END OF YOUR CODE                              #
