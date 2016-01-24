@@ -75,7 +75,7 @@ print 'Theta computed by gradient descent: ', linear_reg3.theta
 #   One line of code expected; replace pred_cost = 0 line              # 
 ########################################################################
 
-pred_cost = 0
+pred_cost = linear_reg3.predict(np.hstack([np.array([1]),np.zeros(X.shape[1])]))*10000
 print 'For average home in Boston suburbs, we predict a median home value of', pred_cost
 
 
@@ -101,7 +101,7 @@ print 'Theta computed by direct solution is: ', theta_n
 #   One line of code expected; replace pred_cost = 0 line              # 
 ########################################################################
 
-pred_cost = 0
+pred_cost = np.dot(theta_n,np.hstack([np.array([[1]]),mu]).T)*10000
 print 'For average home in Boston suburbs, we predict a median home value of', pred_cost
 
 ########################################################################
@@ -119,4 +119,14 @@ learning_rates = [0.01, 0.03, 0.1, 0.3]
 # using data (XX,y). Include them in your writeup.                     #
 #   4-5 lines of code expected                                         #
 ########################################################################
+
+for i in learning_rates:
+	linear_reg5 = LinearReg_SquaredLoss()
+	J_history5 = linear_reg5.train(XX,y,learning_rate=i,num_iters=500,verbose=False)
+	plot_utils.plot_data(range(len(J_history5)),J_history5,'Number of iterations','Cost J')
+	plt.savefig('fig 6 learning_rate='+str(i)+'.pdf')
+
+
+
+
 
