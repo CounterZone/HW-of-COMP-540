@@ -67,7 +67,7 @@ plt.savefig('fig7.pdf')
 # =========== Part 3: Learning Curve for Linear Regression ===========#
 #######################################################################
 
-reg = 1.0
+reg = 0.0
 XXval = np.vstack([np.ones((Xval.shape[0],)),Xval]).T
 
 # implement the learning_curve function in utils.py
@@ -118,7 +118,7 @@ XX_poly_val = np.vstack([np.ones((X_poly_val.shape[0],)),X_poly_val.T]).T
 reg = 0.0
 reglinear_reg2 = RegularizedLinearReg_SquaredLoss()
 theta_opt1 = reglinear_reg1.train(XX_poly,y,reg=reg,num_iters=10000)
-print 'Theta at lambda = 0 is ', theta_opt1
+print 'Theta at lambda = 10 is ', theta_opt1
 
 
 # plot data and training fit for the 6th order polynomial and save it in fig9.pdf

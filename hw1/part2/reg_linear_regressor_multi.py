@@ -132,8 +132,8 @@ class RegularizedLinearReg_SquaredLoss(RegularizedLinearRegressor_Multi):
         # Calculate J (loss) wrt to X,y, and theta.                               #
         #  2 lines of code expected                                               #
         ###########################################################################
-
-
+        J = np.square((np.dot(X,theta) - y)).sum() + reg * (np.square(theta[1:]).sum())
+        J = J / (2*num_examples)
         ###########################################################################
         #                           END OF YOUR CODE                              #
         ###########################################################################
@@ -149,8 +149,9 @@ class RegularizedLinearReg_SquaredLoss(RegularizedLinearRegressor_Multi):
         # Calculate gradient of loss function wrt to X,y, and theta.              #
         #  3 lines of code expected                                               #
         ###########################################################################
-
-
+        grad = np.dot( X.T , (np.dot(X,theta) - y))
+        grad[1:] = grad[1:] + reg*theta[1:]
+        grad = grad / num_examples
         ###########################################################################
         #                           END OF YOUR CODE                              #
         ###########################################################################
