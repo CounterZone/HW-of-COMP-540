@@ -1,6 +1,9 @@
 \documentclass{article}
-\usepackage{amsmath}
 \usepackage{savetrees}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{geometry}
 
 \begin{document}
 \title{Solution to Assignment 1}
@@ -167,4 +170,136 @@ Equations~\ref{eq:1.12} and~\ref{eq:1.15} imply
   \label{eq:1.16}
   Var(\theta) = \sigma^2 (X^TX)^{-1}
 \end{equation}
+
+\section{Problem 3: Part 2: Implementing regularized linear regression}
+
+\begin{table}[h]
+\caption{Files modified and plots generated for Problem3: Part2} \centering
+\begin{tabular}{l|l|l|l|}
+\hline\hline
+Problem & function implemented & Files edited & Output and Plots\\
+\hline\hline
+3.2.A1  & \verb|RegularizedLinearReg_SquaredLoss.loss| & \verb|reg_linear_regressor_multi.py| & Fig~\ref{fig:6} and Fig~\ref{fig:7}\\
+
+3.2.A2  & \verb|RegularizedLinearReg_SquaredLoss.grad_loss| & \verb|reg_linear_regressor_multi.py| & Fig~\ref{fig:6} and Fig~\ref{fig:7}\\
+
+3.2.A3  & \verb|learning_curve| and \verb|feature_normalize| & \verb|utils.py| & Fig~\ref{fig:8}, Fig~\ref{fig:9} and Fig~\ref{fig:10} \\
+
+3.2.A4  & - & \verb|ex2.py| added code for $\lambda=1,10,100$ & Fig~\ref{fig:9_10_reg}\\
+
+3.2.A5  & \verb|validation_curve| & \verb|utils.py| & Fig~\ref{fig:12}\\
+
+3.2.A6  & - & \verb|ex2.py| added code for $\lambda=1$ from prob3.2.A5 & \verb|Error=3.0987791808|\\
+%\verb|Error at lambda = 1.0 (problem3.2.A6) is  3.0987791808| \\
+
+3.2.A7  & \verb|averaged_learning_curve| & \verb|utils.py| & Fig~\ref{fig:11}\\
+\hline
+\end{tabular} \label{table:prob3_part2_summary}
+\end{table}
+
+\subsection{Problem 3.2.A1 and Problem 3.2.A2:}
+\begin{itemize}
+\item Implemented the \verb|RegularizedLinearReg_SquaredLoss.loss| and \verb|RegularizedLinearReg_SquaredLoss.grad_loss| methods in file
+  \verb|reg_linear_regressor_multi.py| per requirements of the problem. 
+\end{itemize}
+The updated methods use regularized regression to calculate the loss and gradient. The output from \verb|ex2.py| is shown in Fig~\ref{fig:6} and Fig~\ref{fig:7}.
+
+\begin{figure}[h]
+  \centering{\includegraphics[width=10cm]{part2/fig6.pdf}}
+  \caption{The training data for regularized linear regression.}\label{fig:6}
+\end{figure}
+
+\begin{figure}[h]
+  \centering{\includegraphics[width=10cm]{part2/fig7.pdf}}
+  \caption{The best fit line for the training data.}\label{fig:7}
+\end{figure}
+
+\subsection{Problem 3.2.A3}
+\begin{itemize}
+\item Implemented the \verb|learning_curve| function in file \verb|utils.py| per the requirements of the problem. The output from
+  \verb|ex2.py| is shown in Fig~\ref{fig:8}
+\item Implemented the \verb|feature_normalize| function in file \verb|utils.py|. The output from \verb|ex2.py| is shown in
+  Fig~\ref{fig:9} and Fig~\ref{fig:10}
+\end{itemize}
+
+\begin{figure}[h]
+  \centering{\includegraphics[width=10cm]{part2/fig8.pdf}}
+  \caption{Learning curves.}\label{fig:8}
+\end{figure}
+
+\begin{figure}[h]
+  \centering{\includegraphics[width=10cm]{part2/fig9.pdf}}
+  \caption{Polynomial fit for lambda = 0 with a p=8 order model.}\label{fig:9}
+\end{figure}
+
+\begin{figure}[h]
+  \centering{\includegraphics[width=10cm]{part2/fig10.pdf}}
+  \caption{Learning curve for lambda = 0.}\label{fig:10}
+\end{figure}
+
+\subsection{Problem 3.2.A4}
+\begin{itemize}
+\item The results for $\lambda = 1.0$ are shown in Fig~\ref{fig:9_reg1} and Fig~\ref{fig:10_reg1}.
+\item The results for $\lambda = 10.0$ are shown in Fig~\ref{fig:9_reg10} and Fig~\ref{fig:10_reg10}.
+\item The results for $\lambda = 100.0$ are shown in Fig~\ref{fig:9_reg100} and Fig~\ref{fig:10_reg100}.
+\end{itemize}
+
+We observe that low value of the regularization parameter $\lambda$ is strongly biased while a large value
+for $\lambda$ has high variance.
+
+\newgeometry{left=0.5cm,right=0.5cm,top=0.5cm,bottom=4cm}
+\begin{figure}[h]
+  \subcaptionbox{Polynomial fit for lambda = 1 with a p=8 order model.\label{fig:9_reg1}}
+  [.5\linewidth]{\includegraphics[width=9cm]{part2/fig9_reg1.pdf}}%
+  \subcaptionbox{Learning curve for lambda = 1.\label{fig:10_reg1}}
+  [.5\linewidth]{\includegraphics[width=9cm]{part2/fig10_reg1.pdf}}
+  
+  \subcaptionbox{Polynomial fit for lambda = 10 with a p=8 order model.\label{fig:9_reg10}}
+  [.5\linewidth]{\includegraphics[width=9cm]{part2/fig9_reg10.pdf}}%
+  \subcaptionbox{Learning curve for lambda = 10.\label{fig:10_reg10}}
+  [.5\linewidth]{\includegraphics[width=9cm]{part2/fig10_reg10.pdf}}
+
+  \subcaptionbox{Polynomial fit for lambda = 100 with a p=8 order model.\label{fig:9_reg100}}
+  [.5\linewidth]{\includegraphics[width=9cm]{part2/fig9_reg100.pdf}}%
+  \subcaptionbox{Learning curve for lambda = 100.\label{fig:10_reg100}}
+  [.5\linewidth]{\includegraphics[width=9cm]{part2/fig10_reg100.pdf}}
+\caption{Polynomial fits and learning curves for different lambda}\label{fig:9_10_reg}
+\end{figure}
+\restoregeometry
+
+\subsection{Problem 3.2.A5}
+\label{3.2.A5}
+\begin{itemize}
+\item Completed the \verb|validation_curve| function in the file \verb|utils.py|. The results from \verb|ex2.py| are shown
+  in Fig~\ref{fig:12}.
+\end{itemize}
+Due to randomness in the training and validation splits of the dataset, the cross validation error can sometimes be lower 
+than the training error.
+We observe that value of $\lambda=1$ is a good choice for the regularization parameter.
+\begin{figure}[h]
+  \centering{\includegraphics[width=10cm]{part2/fig12.pdf}}
+  \caption{Variation in training/validation error with lambda.}\label{fig:12}
+\end{figure}
+
+\subsection{Problem 3.2.A6}
+\begin{itemize}
+\item Per the requirements, added code to \verb|ex2.py|. This uses the best model parameters from section~\ref{3.2.A5} and
+  evaluates the error on test data. We picked a value of about $\lambda=1.0$ for the best model.
+  The output is
+\begin{verbatim}
+Theta at lambda = 1.0 (problem3.2.A6) is  [ 11.21759608   8.38067931   5.21899733   3.62613424   2.11030661
+   1.95470373   0.78523708]
+Error at lambda = 1.0 (problem3.2.A6) is  3.0987791808
+\end{verbatim}
+\end{itemize}
+
+\subsection{Problem 3.2.A7}
+\begin{itemize}
+\item Completed the \verb|averaged_learning_curve| function in the file \verb|utils.py| per the requirements of the problem.
+\end{itemize}
+The output from \verb|ex2.py| is plotted in Fig~\ref{fig:11}
+\begin{figure}[h]
+  \centering{\includegraphics[width=10cm]{part2/fig11.pdf}}
+  \caption{Averaged learning curves for lambda=1.}\label{fig:11}
+\end{figure}
 \end{document}
