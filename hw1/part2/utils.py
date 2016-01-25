@@ -90,7 +90,11 @@ def validation_curve(X,y,Xval,yval):
     # TODO: compute error_train and error_val                                 #
     # 5 lines of code expected                                                #
     ###########################################################################
-  
+  for i in range(len(reg_vec)):
+        reglinear_reg = RegularizedLinearReg_SquaredLoss()
+        theta_opt = reglinear_reg.train(X,y,reg_vec[i],num_iters=1000)
+        error_train[i] = reglinear_reg.loss(theta_opt,X,y,0.0)
+        error_val[i] = reglinear_reg.loss(theta_opt,Xval,yval,0.0) 
   return reg_vec, error_train, error_val
 
 import random
