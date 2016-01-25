@@ -111,7 +111,7 @@ print 'For average home in Boston suburbs, we predict a median home value of', p
 # change the learning_rate and num_iters in the call below to find the 
 # best learning rate for this data set.
 
-learning_rates = [0.01, 0.03, 0.1, 0.3]
+learning_rates = [0.01, 0.03, 0.1, 0.3, 1 ,3]
 
 ########################################################################
 # TODO:                                                                #
