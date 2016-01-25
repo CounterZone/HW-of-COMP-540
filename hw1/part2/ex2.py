@@ -215,3 +215,12 @@ plt.savefig('fig11.pdf')
 reg_vec, error_train, error_val = utils.validation_curve(XX_poly,y,XX_poly_val,yval)
 plot_utils.plot_lambda_selection(reg_vec,error_train,error_val)
 plt.savefig('fig12.pdf')
+
+#Problem 3.2.A6
+# lambda = 1.0 gives the best model (from fig12.pdf)
+reg = 1.0
+reglinear_reg3 = RegularizedLinearReg_SquaredLoss()
+theta_opt = reglinear_reg3.train(XX_poly,y,reg,num_iters=1000)
+error_test = reglinear_reg3.loss(theta_opt,XX_poly_test,ytest,0.0)
+print 'Theta at lambda = 1.0 (problem3.2.A6) is ', theta_opt
+print 'Error at lambda = 1.0 (problem3.2.A6) is ', error_test
