@@ -117,13 +117,12 @@ XX_poly_val = np.vstack([np.ones((X_poly_val.shape[0],)),X_poly_val.T]).T
 
 reg = 0.0
 reglinear_reg2 = RegularizedLinearReg_SquaredLoss()
-theta_opt1 = reglinear_reg1.train(XX_poly,y,reg=reg,num_iters=10000)
-print 'Theta at lambda = 10 is ', theta_opt1
-
+theta_opt0 = reglinear_reg2.train(XX_poly,y,reg=reg,num_iters=10000)
+print 'Theta at lambda = 0 is ', theta_opt0
 
 # plot data and training fit for the 6th order polynomial and save it in fig9.pdf
 
-plot_utils.plot_fit(X,y,np.min(X),np.max(X),mu,sigma,theta_opt1,p,'Change in water level (x)','Water flowing out of dam (y)','Polynomial Regression fit with lambda = 0 and polynomial features of degree = ' + str(p))
+plot_utils.plot_fit(X,y,np.min(X),np.max(X),mu,sigma,theta_opt0,p,'Change in water level (x)','Water flowing out of dam (y)','Polynomial Regression fit with lambda = 0 and polynomial features of degree = ' + str(p))
 
 plt.savefig('fig9.pdf')
 
@@ -133,6 +132,62 @@ plt.savefig('fig9.pdf')
 error_train,error_val = utils.learning_curve(XX_poly,y,XX_poly_val,yval,reg)
 plot_utils.plot_learning_curve(error_train,error_val,reg)
 plt.savefig('fig10.pdf')
+
+#lambda=1 for problem3.2.A4
+reg = 1.0
+theta_opt1 = reglinear_reg2.train(XX_poly,y,reg=reg,num_iters=10000)
+print 'Theta at lambda = 1 is ', theta_opt1
+
+# plot data and training fit for the 6th order polynomial and save it in fig9_reg1.pdf
+
+plot_utils.plot_fit(X,y,np.min(X),np.max(X),mu,sigma,theta_opt1,p,'Change in water level (x)','Water flowing out of dam (y)','Polynomial Regression fit with lambda = 1 and polynomial features of degree = ' + str(p))
+
+plt.savefig('fig9_reg1.pdf')
+
+# plot learning curve for data (6th order polynomail basis function) and save
+# it in fig10_reg1.pdf
+
+error_train,error_val = utils.learning_curve(XX_poly,y,XX_poly_val,yval,reg)
+plot_utils.plot_learning_curve(error_train,error_val,reg)
+plt.savefig('fig10_reg1.pdf')
+
+#lambda=10 for problem3.2.A4
+reg = 10.0
+theta_opt10 = reglinear_reg2.train(XX_poly,y,reg=reg,num_iters=10000)
+print 'Theta at lambda = 10 is ', theta_opt10
+
+# plot data and training fit for the 6th order polynomial and save it in fig9_reg10.pdf
+
+plot_utils.plot_fit(X,y,np.min(X),np.max(X),mu,sigma,theta_opt10,p,'Change in water level (x)','Water flowing out of dam (y)','Polynomial Regression fit with lambda = 10 and polynomial features of degree = ' + str(p))
+
+plt.savefig('fig9_reg10.pdf')
+
+# plot learning curve for data (6th order polynomail basis function) and save
+# it in fig10_reg10.pdf
+
+error_train,error_val = utils.learning_curve(XX_poly,y,XX_poly_val,yval,reg)
+plot_utils.plot_learning_curve(error_train,error_val,reg)
+plt.savefig('fig10_reg10.pdf')
+
+
+
+#lambda=100 for problem3.2.A4
+reg = 100.0
+theta_opt100 = reglinear_reg2.train(XX_poly,y,reg=reg,num_iters=10000)
+print 'Theta at lambda = 100 is ', theta_opt100
+
+# plot data and training fit for the 6th order polynomial and save it in fig9_reg100.pdf
+
+plot_utils.plot_fit(X,y,np.min(X),np.max(X),mu,sigma,theta_opt100,p,'Change in water level (x)','Water flowing out of dam (y)','Polynomial Regression fit with lambda = 100 and polynomial features of degree = ' + str(p))
+
+plt.savefig('fig9_reg100.pdf')
+
+# plot learning curve for data (6th order polynomail basis function) and save
+# it in fig10_reg100.pdf
+
+error_train,error_val = utils.learning_curve(XX_poly,y,XX_poly_val,yval,reg)
+plot_utils.plot_learning_curve(error_train,error_val,reg)
+plt.savefig('fig10_reg100.pdf')
 
 
 #######################################################################
