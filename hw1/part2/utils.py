@@ -125,9 +125,20 @@ def averaged_learning_curve(X,y,Xval,yval,reg):
     # TODO: compute error_train and error_val                                 #
     # 10-12 lines of code expected                                            #
     ###########################################################################
-
-
-
+    num_of_trials = 50
+    for trial in range(num_of_trials):
+        X_y = np.vstack([X.T,y]).T
+        Xval_yval = np.vstack([Xval.T,yval]).T
+        np.random.shuffle(X_y)
+        np.random.shuffle(Xval_yval)
+        
+        for i in range(1,num_examples):
+             reglinear_reg = RegularizedLinearReg_SquaredLoss()
+             theta_opt = reglinear_reg.train(X_y[0:i+1,0:dim],X_y[0:i+1,dim],reg,num_iters=1000)
+             error_train[i] += reglinear_reg.loss(theta_opt,X_y[0:i+1,0:dim],X_y[0:i+1,dim],0.0)
+             error_val[i] += reglinear_reg.loss(theta_opt,Xval_yval[0:i+1,0:dim],Xval_yval[0:i+1,dim],0.0)
+    error_train = error_train / float(num_of_trials)
+    error_val = error_val / float(num_of_trials)
     ###########################################################################
     return error_train, error_val
 
