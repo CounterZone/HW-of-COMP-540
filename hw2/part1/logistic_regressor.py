@@ -208,8 +208,8 @@ class RegLogisticRegressor:
         # Compute the loss function for regularized logistic regression          #
         # TODO: 1-2 lines of code expected                                       #
         ##########################################################################
-
-
+        J = (np.multiply(-y,np.log(utils.sigmoid(X.dot(theta))))
+           - np.multiply(1-y, np.log(1-utils.sigmoid(X.dot(theta))))).mean() + ((reg/2*float(m)) * np.square(theta[1:]).sum())
         ###########################################################################
         #                           END OF YOUR CODE                              #
         ###########################################################################
@@ -233,12 +233,12 @@ class RegLogisticRegressor:
         m,dim = X.shape
         grad = np.zeros((dim,))
         ##########################################################################
-        # Compute the gradient of the loss function for unregularized logistic   #
+        # Compute the gradient of the loss function for regularized logistic   #
         # regression                                                             #
         # TODO: 1 line of code expected                                          #
         ##########################################################################
-
-
+        grad = np.dot(X.T,utils.sigmoid(X.dot(theta)) - y) / float(m)
+        grad[1:] = grad[1:] + (reg/float(m))*theta[1:]
         ###########################################################################
         #                           END OF YOUR CODE                              #
         ###########################################################################
@@ -264,7 +264,7 @@ class RegLogisticRegressor:
         # TODO: 1 line of code expected                                           #
         #                                                                         #
         ###########################################################################
-
+        y_pred = 1* (utils.sigmoid(X.dot(self.theta)) >= 0.5)
 
         ###########################################################################
         #                           END OF YOUR CODE                              #
