@@ -12,7 +12,7 @@ import scipy.io
 ######################################################################################
 
 def sigmoid (z):
-    sig = np.zeros(z.shape)
+#    sig = np.zeros(z.shape)
     # Your code here
     sig = 1. / (1 + np.exp(-z))
     # End your ode
@@ -29,7 +29,7 @@ def sigmoid (z):
 def log_features(X):
     logf = np.zeros(X.shape)
     # Your code here
-    
+    logf = np.log(1+X)
     # End your ode
     return logf
 
@@ -55,9 +55,32 @@ def std_features(X):
 def bin_features(X):
     tX = np.zeros(X.shape)
     # your code here
-
+    tX = 1*(X>0)
     # end your code
     return tX
+
+#############################################################################
+#  Normalize features of data matrix X so that every column has zero        #
+#  mean and unit variance                                                   #
+#     Input:                                                                #
+#     X: N x D where N is the number of rows and D is the number of         #
+#        features                                                           #
+#     Output: mu: D x 1 (mean of X)                                         #
+#          sigma: D x 1 (std dev of X)                                      #
+#         X_norm: N x D (normalized X)                                      #
+#############################################################################
+
+def feature_normalize(X):
+
+    ########################################################################
+    # TODO: modify the three lines below to return the correct values
+
+    mu = np.mean(X,axis=0)
+    sigma = np.std(X,axis=0)
+    X_norm = (X - mu) / sigma
+      
+    ########################################################################
+    return X_norm, mu, sigma
 
 ######################################################################################
 #   The select_lambda_crossval function                                              #

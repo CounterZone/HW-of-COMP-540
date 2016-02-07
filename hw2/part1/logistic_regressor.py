@@ -71,8 +71,7 @@ class LogisticRegressor:
         # Compute the loss function for unregularized logistic regression        #
         # TODO: 1-2 lines of code expected                                       #
         ##########################################################################
-        J = (np.multiply(-y,np.log(utils.sigmoid(X.dot(theta))))
-           - np.multiply(1-y, np.log(1-utils.sigmoid(X.dot(theta))))).mean()
+        J = (np.multiply(-y,np.log(utils.sigmoid(X.dot(theta)))) - np.multiply(1-y, np.log(1-utils.sigmoid(X.dot(theta))))).mean()
         ###########################################################################
         #                           END OF YOUR CODE                              #
         ###########################################################################
@@ -208,8 +207,9 @@ class RegLogisticRegressor:
         # Compute the loss function for regularized logistic regression          #
         # TODO: 1-2 lines of code expected                                       #
         ##########################################################################
-        J = (np.multiply(-y,np.log(utils.sigmoid(X.dot(theta))))
-           - np.multiply(1-y, np.log(1-utils.sigmoid(X.dot(theta))))).mean() + ((reg/2*float(m)) * np.square(theta[1:]).sum())
+        J = (np.multiply(-y,np.log(utils.sigmoid(X.dot(theta)))) - np.multiply(1-y, np.log(1-utils.sigmoid(X.dot(theta))))).mean()
+        J = J + ((reg/2*float(m)) * np.linalg.norm(theta[1:],2)**2)
+#        print '\n lambda is \t\tLoss  is: ',reg,J
         ###########################################################################
         #                           END OF YOUR CODE                              #
         ###########################################################################
