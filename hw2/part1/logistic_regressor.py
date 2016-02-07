@@ -208,7 +208,7 @@ class RegLogisticRegressor:
         # TODO: 1-2 lines of code expected                                       #
         ##########################################################################
         J = (np.multiply(-y,np.log(utils.sigmoid(X.dot(theta)))) - np.multiply(1-y, np.log(1-utils.sigmoid(X.dot(theta))))).mean()
-        J = J + ((reg/2*float(m)) * np.linalg.norm(theta[1:],2)**2)
+        J += (reg/2*m) * ((np.linalg.norm(theta[1:],2))**2)
 #        print '\n lambda is \t\tLoss  is: ',reg,J
         ###########################################################################
         #                           END OF YOUR CODE                              #
@@ -238,7 +238,7 @@ class RegLogisticRegressor:
         # TODO: 1 line of code expected                                          #
         ##########################################################################
         grad = np.dot(X.T,utils.sigmoid(X.dot(theta)) - y) / float(m)
-        grad[1:] = grad[1:] + (reg/float(m))*theta[1:]
+        grad[1:] = grad[1:] + (reg/m)*theta[1:]
         ###########################################################################
         #                           END OF YOUR CODE                              #
         ###########################################################################
