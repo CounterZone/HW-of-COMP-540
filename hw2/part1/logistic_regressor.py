@@ -71,8 +71,8 @@ class LogisticRegressor:
         # Compute the loss function for unregularized logistic regression        #
         # TODO: 1-2 lines of code expected                                       #
         ##########################################################################
-
-
+        J = (np.multiply(-y,np.log(utils.sigmoid(X.dot(theta))))
+           - np.multiply(1-y, np.log(1-utils.sigmoid(X.dot(theta))))).mean()
         ###########################################################################
         #                           END OF YOUR CODE                              #
         ###########################################################################
@@ -98,8 +98,7 @@ class LogisticRegressor:
         # regression                                                             #
         # TODO: 1 line of code expected                                          #
         ##########################################################################
-
-
+        grad = np.dot(X.T,utils.sigmoid(X.dot(theta)) - y) / m
         ###########################################################################
         #                           END OF YOUR CODE                              #
         ###########################################################################
@@ -124,7 +123,7 @@ class LogisticRegressor:
         # Compute the predicted outputs for X                                     #
         # TODO: 1 line of code expected                                           #
         ###########################################################################
-
+        y_pred = 1* (utils.sigmoid(X.dot(self.theta)) >= 0.5)
 
         ###########################################################################
         #                           END OF YOUR CODE                              #
