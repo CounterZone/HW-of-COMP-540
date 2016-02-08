@@ -10,7 +10,7 @@ import numpy as np
 def sigmoid (z):
 #    sig = np.zeros(z.shape)
     # Your code here
-    sig = 1.0 / (1 + np.exp(-z))
+    sig = 1 / (1 + np.exp(-z))
     # End your ode
 
     return sig
