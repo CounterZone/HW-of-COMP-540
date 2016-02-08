@@ -57,5 +57,5 @@ genre_accuracy = np.multiply(cm.diagonal() , 1.0/cm.sum(1))
 genre_accuracy_fft = np.multiply(cmfft.diagonal() , 1.0/cmfft.sum(1))
 
 for i in range(0,10):
-    print "--- Genere = ", genres[i], " accuracy with Mel Cepstral representation", genre_accuracy[i]
-    print "--- Genere = ", genres[i], " accuracy with Fourier representation", genre_accuracy_fft[i]
+    print "--- Genre = ", genres[i], " accuracy with Mel Cepstral representation", genre_accuracy[i]
+    print "--- Genre = ", genres[i], " accuracy with Fourier representation", genre_accuracy_fft[i]
