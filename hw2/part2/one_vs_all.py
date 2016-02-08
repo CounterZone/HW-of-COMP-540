@@ -74,7 +74,6 @@ class one_vs_allLogisticRegressor:
         # TODO: 2 lines of code expected                                          #
         ###########################################################################
         y_pred = np.argmax(utils.sigmoid(X.dot(self.theta.T)),axis=1)
-        y_pred += 1
 
         ###########################################################################
         #                           END OF YOUR CODE                              #
