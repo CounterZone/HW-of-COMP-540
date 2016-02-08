@@ -12,11 +12,10 @@ import scipy.io
 ######################################################################################
 
 def sigmoid (z):
-#    sig = np.zeros(z.shape)
+    sig = np.zeros(z.shape)
     # Your code here
-    sig = 1. / (1 + np.exp(-z))
+    sig = 1/(1+np.exp(-1*z))
     # End your ode
-
     return sig
 
 ######################################################################################
@@ -29,7 +28,7 @@ def sigmoid (z):
 def log_features(X):
     logf = np.zeros(X.shape)
     # Your code here
-    logf = np.log(1+X)
+    logf = np.log(X+0.1)
     # End your ode
     return logf
 
@@ -55,32 +54,9 @@ def std_features(X):
 def bin_features(X):
     tX = np.zeros(X.shape)
     # your code here
-    tX = 1*(X>0)
+    tX = np.array(X>0,dtype=int)
     # end your code
     return tX
-
-#############################################################################
-#  Normalize features of data matrix X so that every column has zero        #
-#  mean and unit variance                                                   #
-#     Input:                                                                #
-#     X: N x D where N is the number of rows and D is the number of         #
-#        features                                                           #
-#     Output: mu: D x 1 (mean of X)                                         #
-#          sigma: D x 1 (std dev of X)                                      #
-#         X_norm: N x D (normalized X)                                      #
-#############################################################################
-
-def feature_normalize(X):
-
-    ########################################################################
-    # TODO: modify the three lines below to return the correct values
-
-    mu = np.mean(X,axis=0)
-    sigma = np.std(X,axis=0)
-    X_norm = (X - mu) / sigma
-      
-    ########################################################################
-    return X_norm, mu, sigma
 
 ######################################################################################
 #   The select_lambda_crossval function                                              #
@@ -113,8 +89,28 @@ def select_lambda_crossval(X,y,lambda_low,lambda_high,lambda_step,penalty):
 
     # Your code here
     # Implement the algorithm above.
-
-
+    best_accu=0
+    kf=cross_validation.KFold(y.shape[0],10)
+    l=lambda_low
+    while l<=lambda_high:    
+        accu=0
+        for train_index, test_index in kf:
+            xx=X[train_index]
+            yy=y[train_index]
+            xt=X[test_index]
+            yt=y[test_index]
+            if penalty == "l2":
+                lreg = linear_model.LogisticRegression(penalty=penalty,C=1.0/best_lambda, solver='lbfgs',fit_intercept=True)
+            else:
+                lreg = linear_model.LogisticRegression(penalty=penalty,C=1.0/best_lambda, solver='liblinear',fit_intercept=True)
+            lreg.fit(xx,yy)
+            predy = lreg.predict(xt)
+            accu=accu+np.mean(predy==yt)
+	accu=accu/10
+        if accu>best_accu:
+            best_accu=accu
+            best_lambda=l
+        l=l+lambda_step
     # end your code
 
     return best_lambda
