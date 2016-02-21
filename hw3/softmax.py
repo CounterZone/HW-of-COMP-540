@@ -47,7 +47,10 @@ class SoftmaxClassifier:
       # replacement is faster than sampling without replacement.              #
       #########################################################################
       # Hint: 3 lines of code expected
-
+      
+      index=np.random.choice(range(0,len(y)),size=batch_size)
+      X_batch=X[index,:]
+      y_batch=y[index]
 
 
       #########################################################################
@@ -65,6 +68,7 @@ class SoftmaxClassifier:
       #########################################################################
       # Hint: 1 line of code expected
 
+      self.theta-=grad*learning_rate
 
       #########################################################################
       #                       END OF YOUR CODE                                #
@@ -88,13 +92,14 @@ class SoftmaxClassifier:
       array of length m, and each element is an integer giving the predicted
       class.
     """
-    y_pred = np.zeros(X.shape[1])
+    y_pred = np.zeros(X.shape[0])
     ###########################################################################
     # TODO:                                                                   #
     # Implement this method. Store the predicted labels in y_pred.            #
     ###########################################################################
     # Hint: 1 line of code expected
 
+    y_pred=np.argmax(X.dot(self.theta),1)
 
     ###########################################################################
     #                           END OF YOUR CODE                              #
@@ -146,7 +151,17 @@ def softmax_loss_naive(theta, X, y, reg):
   #############################################################################
   # Hint: about 5-10 lines of code expected
 
-
+  for i in range(0,m):
+    p=np.zeros(max(y)+1)
+    for j in range(0,max(y)+1):
+	po=0
+	for jj in range(0,max(y)+1):
+		po=po+np.exp(theta[:,jj].dot(X[i,:])-theta[:,j].dot(X[i,:]))
+	p[j]=1/po
+    	grad[:,j]-=X[i,:]*(float(y[i]==j)-p[j])/m
+    J=J+np.log(p[y[i]])
+  J=-J/m+reg*np.sum(theta**2)
+  grad=grad+2*theta*reg
 
   #############################################################################
   #                          END OF YOUR CODE                                 #
@@ -185,7 +200,11 @@ def softmax_loss_vectorized(theta, X, y, reg):
   # regularization term!                                                      #
   #############################################################################
   # Hint: 4-6 lines of code expected
-
+  xt=X.dot(theta)
+  Pt=np.exp(xt-np.max(xt,1).reshape([m,1]).dot(np.ones([1,theta.shape[1]])))
+  P=Pt/Pt.sum(1).reshape([m,1]).dot(np.ones([1,theta.shape[1]]))
+  J=-1.0/m*np.sum(np.multiply(np.log(P),convert_y_to_matrix(y)))+reg*np.sum(theta**2)
+  grad=-1.0/m*X.T.dot((convert_y_to_matrix(y)-P))+2*theta*reg
 
   #############################################################################
   #                          END OF YOUR CODE                                 #

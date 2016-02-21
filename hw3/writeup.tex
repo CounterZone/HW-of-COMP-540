@@ -1,0 +1,103 @@
+\documentclass{article}
+\usepackage{ listings} 
+\usepackage{amsmath}
+\usepackage{float} 
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{geometry}
+\usepackage{amsthm}
+\usepackage{amssymb}
+
+\begin{document}
+\title{Solution to Homework 2}
+\author{Shoeb Mohammed and Zhuo Chen}
+\maketitle
+
+\newcommand{\QEDA}{\hfill\ensuremath{\blacksquare}}
+\newcommand{\QEDB}{\hfill\ensuremath{\square}}
+
+\section{MAP and MLE parameter estimation}
+\subsection{}
+\begin{equation}
+Likelihood(\theta|D)=P(D|\theta)=\theta^n(1-\theta)^{m-n}
+\end{equation}
+Where n is the times of $X=1$ in D.\\
+According to MLE method we need to derive the maximum point of $Likelihood(\theta|D)$:
+\begin{equation}
+Likelihood'(\theta|D)=n\theta^{n-1}(1-\theta)^{m-n}-(m-n)\theta^n(1-\theta)^{m-n-1}
+\end{equation}
+set the derivative equals to 0, we get
+\begin{align}
+& Likelihood'(\theta|D)=n\theta^{n-1}(1-\theta)^{m-n}-(m-n)\theta^n(1-\theta)^{m-n-1}=0\\
+&\theta=0 \quad|\quad \theta=1 \quad|\quad \theta=\frac{n}{m}
+\end{align}
+Since we know $0<=\theta<=1$, it's easy to verify that $\theta=\frac{n}{m}$ is the maximum point. So $\theta=\frac{n}{m}$ is a MLE for $\theta$.
+\subsection{}
+According to Bayesian statistics, we have:(since P(D) is a Constant)
+\begin{equation}
+P(\theta|D)=\frac{P(D|\theta)P(\theta)}{P(D)}\propto Beta(\theta|a,b)Likelihood(\theta|D)\propto\theta^{n+a-1}(1-\theta)^{m-n+b-1}
+\end{equation}
+It's very easy to show that the MAP estimation of $\theta$ is:
+\begin{equation}
+\theta=\frac{n+a-1}{m+a+b-2}
+\end{equation}
+When $a=b=1$, it equals to MLE estimation.
+\section{Logistic regression and Gaussian Naive Bayes}
+\section{Softmax regression and OVA logistic regression}
+\subsection{Implementing the loss function for softmax regression (naive version)}
+\subsection{Implementing the gradient of loss function for softmax regression(naive version)}
+Implemented the \verb|softmax_loss_naive| method in file \verb|softmax.py|:\\[10pt]
+for i in range(0,m):\\
+    p=np.zeros(max(y)+1)\\
+    for j in range(0,max(y)+1):\\
+	po=0\\
+	for jj in range(0,max(y)+1):\\
+		po=po+np.exp(theta[:,jj].dot(X[i,:])-theta[:,j].dot(X[i,:]))\\
+	p[j]=1/po\\
+    	grad[:,j]-=X[i,:]*(float(y[i]==j)-p[j])/m\\
+    J=J+np.log(p[y[i]])\\
+  J=-J/m+reg*np.sum(theta**2)\\
+  grad=grad+2*theta*reg\\[10pt]
+result:\\[10pt]
+Training data shape:  (49000, 3072)\\
+Validation data shape:  (1000, 3072)\\
+Test data shape:  (10000, 3072)\\
+Training data shape with bias term:  (49000, 3073)\\
+Validation data shape with bias term:  (1000, 3073)\\
+Test data shape with bias term:  (10000, 3073)\\
+loss: 2.33181510664  should be close to  2.30258509299\\
+numerical: 1.846291 analytic: 1.846291, relative error: 1.620672e-08\\
+numerical: 0.402461 analytic: 0.402461, relative error: 1.300510e-07\\
+numerical: 2.983793 analytic: 2.983793, relative error: 9.064330e-09\\
+numerical: 0.277037 analytic: 0.277037, relative error: 7.767378e-08\\
+numerical: 1.066744 analytic: 1.066744, relative error: 5.981913e-08\\
+numerical: -0.718366 analytic: -0.718366, relative error: 6.584340e-08\\
+numerical: -0.298495 analytic: -0.298495, relative error: 1.193483e-07\\
+numerical: 2.824531 analytic: 2.824531, relative error: 2.177955e-08\\
+numerical: -0.617456 analytic: -0.617456, relative error: 1.193407e-08\\
+numerical: 0.150777 analytic: 0.150777, relative error: 5.651458e-08\\[10pt]
+It performs as expected.\\
+\subsection{Implementing the loss function for softmax regression (vectorized version)}
+\subsection{Implementing the gradient of loss function for softmax regression(vectorized version)}
+Implemented the \verb|softmax_loss_vectorized| method in file \verb|softmax.py|:\\[10pt]
+xt=X.dot(theta)\\
+Pt=np.exp(xt-np.max(xt,1).reshape([m,1]).dot(np.ones([1,theta.shape[1]])))\\
+P=Pt/Pt.sum(1).reshape([m,1]).dot(np.ones([1,theta.shape[1]]))\\
+J=-1.0/m*np.sum(np.multiply(np.log(P),convert\_y\_to\_matrix(y)))+reg*np.sum(theta**2)\\ grad=-1.0/m*X.T.dot((convert\_y\_to\_matrix(y)-P))+2*theta*reg\\[10pt]
+result:\\[10pt]
+naive loss: 2.331815e+00 computed in 2945.336793s\\
+vectorized loss: 2.331815e+00 computed in 7.681536s\\
+Loss difference: 0.000000\\
+Gradient difference: 0.000000\\[10pt]
+we can see vectorized method is about 400 times faster then using for-loop because numpy has optimation for operating matrices, and it can get the same result.\\
+\subsection{Implementing mini-batch gradient descent}
+Implemented \verb|train| and \verb|predict| method of \verb|SoftmaxClassifier| class in file \verb|softmax.py|.\\[10pt]
+index=np.random.choice(range(0,len(y)),size=batch\_size)\\
+      X\_batch=X[index,:]\\
+      y\_batch=y[index]\\[8pt]
+      self.theta-=grad*learning\_rate\\[8pt]
+          y\_pred=np.argmax(X.dot(self.theta),1)\\[10pt]
+\subsection{Using a validation set to select regularization lambda and learning rate for gradient descent}
+\subsection{Training a softmax classifier with the best hyperparameters}
+
+\end{document}

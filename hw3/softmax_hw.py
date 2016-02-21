@@ -6,6 +6,9 @@ from softmax import softmax_loss_naive, softmax_loss_vectorized
 from softmax import SoftmaxClassifier
 import time
 
+
+
+
 # Get the CIFAR-10 data broken up into train, validation and test sets
 
 X_train, y_train, X_val, y_val, X_test, y_test = utils.get_CIFAR10_data()
@@ -17,7 +20,10 @@ X_train, y_train, X_val, y_val, X_test, y_test = utils.get_CIFAR10_data()
 # Generate a random softmax theta matrix and use it to compute the loss.
 
 theta = np.random.randn(3073,10) * 0.0001
-loss, grad = softmax_loss_naive(theta, X_train, y_train, 0.0)
+
+'''
+
+loss, grad = softmax_loss_vectorized(theta, X_train, y_train, 0.0)
 
 # Loss should be something close to - log(0.1)
 
@@ -34,6 +40,7 @@ grad_numerical = grad_check_sparse(f, theta, grad, 10)
 # implement a vectorized version in softmax_loss_vectorized.
 # The two versions should compute the same results, but the vectorized version should be
 # much faster.
+
 
 tic = time.time()
 loss_naive, grad_naive = softmax_loss_naive(theta, X_train, y_train, 0.00001)
@@ -57,7 +64,7 @@ print 'Gradient difference: %f' % grad_difference
 # learning rate). You should experiment with different ranges for the learning
 # rates and regularization strengths; if you are careful you should be able to
 # get a classification accuracy of over 0.35 on the validation set and the test set.
-
+'''
 results = {}
 best_val = -1
 best_softmax = None
@@ -71,8 +78,16 @@ regularization_strengths = [5e4, 1e5, 5e5, 1e8]
 # Hint: about 10 lines of code expected
 ################################################################################
 
-
-
+for lr in learning_rates:
+	for rs in regularization_strengths:
+		ns=SoftmaxClassifier()
+		ns.train(X_train,y_train,lr,rs,verbose=True)
+		ta=np.mean(y_train == ns.predict(X_train))
+		va=np.mean(y_val == ns.predict(X_val))
+		results[lr,rs]=(ta,va)
+		if va>best_val:
+			best_val=va
+			best_softmax=ns
 ################################################################################
 #                              END OF YOUR CODE                                #
 ################################################################################
