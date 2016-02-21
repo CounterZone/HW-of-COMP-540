@@ -1,0 +1,179 @@
+\documentclass{article}
+\usepackage{ listings} 
+\usepackage{amsmath}
+\usepackage{float} 
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{geometry}
+\usepackage{amsthm}
+\usepackage{amssymb}
+
+\begin{document}
+\title{Solution to Homework 3}
+\author{Shoeb Mohammed and Zhuo Chen}
+\maketitle
+
+\newcommand{\QEDA}{\hfill\ensuremath{\blacksquare}}
+\newcommand{\QEDB}{\hfill\ensuremath{\square}}
+
+\section{MAP and MLE parameter estimation}
+$\mathcal{D} = \{x^{(i)} | 1 \leq i \leq m\}$ where $x^{(i)} \sim \text{ i.i.d } Ber(\theta)$
+\subsection{}
+If $m_1$ are number of heads, $m_0$ are number of tails and $m_0 + m_1 = m$ then the likelihood and MLE for $\theta$ are
+\begin{equation}
+  \label{eq:1.1}
+  p(\mathcal{D} | \theta) = \theta^{m_1} (1-\theta)^{m_0}
+\end{equation}
+
+\begin{equation}
+  \label{eq:1.2}
+  \begin{split}
+  \theta_{MLE} &= argmax_{\theta} \theta^{m_1} (1-\theta)^{m_0} \\
+               &= argmax_{\theta} m_1 \log \theta + m_0 \log (1-\theta)
+  \end{split}
+\end{equation}
+
+
+$\theta_{MLE}$ satisfies (first derivative of the likelihood equals zero)
+
+\begin{equation}
+  \label{eq:1.3}
+    \frac{m_1}{\theta_{MLE}} - \frac{m_0}{1-\theta_{MLE}} = 0
+\end{equation}
+
+Thus, 
+\begin{equation}
+  \label{eq:1.4}
+  \begin{split}
+    \theta_{MLE} &= \frac{m_1}{m_0 + m_1} \\
+                 &= \frac{m_1}{m}
+  \end{split}
+\end{equation}
+
+
+\subsection{}
+The prior is 
+\begin{equation}
+  \label{eq:1.5}
+  \begin{split}
+  p(\theta) &= Beta(\theta | a,b) \\
+            &\propto \theta^{(a-1)}(1-\theta)^{(b-1)}
+  \end{split}
+\end{equation}
+
+Thus, the posterior is 
+\begin{equation}
+  \label{eq:1.6}
+  \begin{split}
+   p(\theta | \mathcal{D}) &= \frac{ p(\mathcal{D} | \theta) p(\theta)}{p(\mathcal{D})} \\
+                           &= \frac{ p(\mathcal{D} | \theta) p(\theta)}{\sum_{\theta'}p(\mathcal{D} | \theta')p(\theta')} \\
+                           &\propto \theta^{m_1 + a - 1} \theta^{m_0 + b - 1}
+  \end{split}
+\end{equation}
+
+Thus, 
+\begin{equation}
+  \label{eq:1.7}
+  \begin{split}
+   \theta_{MAP} &= argmax_{\theta} \theta^{m_1 + a - 1} \theta^{m_0 + b - 1} \\
+                &= argmax_{\theta} (m_1 + a -1 ) \log \theta + (m_0 + b -1) \log (1-\theta)
+  \end{split}
+\end{equation}
+
+
+Equation~\ref{eq:1.7} is similar to MLE estimation. Thus,
+
+\begin{equation}
+  \label{eq:1.8}
+  \begin{split}
+    \theta_{MAP} &= \frac{m_1 + a - 1}{m_0 + m_1 + a + b -2} \\
+                 &= \frac{m_1 + a - 1}{m + a + b -2}
+  \end{split}
+\end{equation}
+
+It is clear from equations~\ref{eq:1.8} and~\ref{eq:1.4} that $\theta_{MAP} = \theta_{MLE}$ when $a=b=1$.
+
+\section{Logistic regression and Gaussian Naive Bayes}
+\subsection{}
+\begin{equation}
+  \label{eq:1.9}
+  \begin{split}
+    p(y=1 | x) &= g(\theta^T x) \\
+    p(y=0 | x) &= 1 - g(\theta^T x) \\
+  \end{split}
+\end{equation}
+
+\subsection{}
+\newcommand{\N}{\mathcal{N}}
+With naives Bayes assumption,
+\begin{equation}
+  \label{eq:1.10}
+  \begin{split}
+    p(y=1 | x) &= \frac{p(x | y=1) p(y=1)}{p(x)} \\
+               &= \frac{p(x | y=1) p(y=1)}{p(x | y=1)p(y=1) + p(x | y=0) p(y=0)} \\
+               &= \frac{p(x | y=1) \gamma}{p(x | y=1)\gamma + p(x | y=0) (1-\gamma)} \text{\quad since $y \sim Ber(\gamma)$}\\
+               &= \frac{\prod_{j=1}^{d} \N(\mu_j^1,\sigma_j^2)\gamma}{\prod_{j=1}^{d} \N(\mu_j^1,\sigma_j^2)\gamma + \prod_{j=1}^{d} \N(\mu_j^0,\sigma_j^2)(1-\gamma)}
+                  \text{\quad since $p(x_j|y=1) \sim \N(\mu_j^1,\sigma_j^2)$ and $p(x_j|y=0) \sim \N(\mu_j^0,\sigma_j^2)$}\\
+               &= \frac{\N(\mu^1,\Sigma)\gamma}{\N(\mu^1,\Sigma)\gamma + \N(\mu^0,\Sigma)(1-\gamma)}
+                  \text{\quad where $\mu_0 = (\mu_1^0 \cdots \mu_d^0)^T $ , $\mu_1 = (\mu_1^1 \cdots \mu_d^1)^T , \Sigma = diag(\sigma_1^2 \cdots \sigma_d^2)$}
+  \end{split}
+\end{equation}
+
+\begin{equation}
+  \label{eq:1.11}
+  \begin{split}
+    p(y=0 | x) &= \frac{p(x | y=0) p(y=0)}{p(x)} \\
+               &= \frac{p(x | y=0) p(y=0)}{p(x | y=1)p(y=1) + p(x | y=0) p(y=0)} \\
+               &= \frac{\N(\mu^0,\Sigma)\gamma}{\N(\mu^1,\Sigma)\gamma + \N(\mu^0,\Sigma)(1-\gamma)}
+                  \text{\quad where $\mu_0 = (\mu_1^0 \cdots \mu_d^0)^T $ , $\mu_1 = (\mu_1^1 \cdots \mu_d^1)^T , \Sigma = diag(\sigma_1^2 \cdots \sigma_d^2)$}
+  \end{split}
+\end{equation}
+
+\subsection{}
+\begin{proof}
+With uniform class priors, equation~\ref{eq:1.10} gives
+\begin{equation}
+  \label{eq:1.12}
+  \begin{split}
+    p(y=1 | x) &= \frac{\N(\mu^1,\Sigma)}{\N(\mu^1,\Sigma) + \N(\mu^0,\Sigma)} \\
+               &= \frac{1}{1 + \frac{\N(\mu^0,\Sigma)}{\N(\mu^1,\Sigma)}} \\
+               &= \frac{1}{1 + \frac{\exp(\frac{1}{2}(x-\mu^1)^T\Sigma^{-1}(x-\mu^1))}{\exp(\frac{1}{2}(x-\mu^0)^T\Sigma^{-1}(x-\mu^0))}} \\
+               &= \frac{1}{1 + \frac{\exp((x-\mu^1)^T\Lambda^2(x-\mu^1))}{\exp((x-\mu^0)^T\Lambda^2(x-\mu^0))}}
+                  \text{\quad where $\Lambda = diag\left(\frac{1}{\sqrt{2}\sigma_1} \cdots \frac{1}{\sqrt{2}\sigma_d}\right)$} \\
+               &= \frac{1} {1 + \frac{\exp((\Lambda(x-\mu^1))^T(\Lambda(x-\mu^1)))}
+                                     {\exp((\Lambda(x-\mu^0))^T(\Lambda(x-\mu^0)))}
+                           }\\
+               &= \frac{1} {1 + \frac{\exp((\Lambda(z+a))^T(\Lambda(z+a)))}
+                                     {\exp((\Lambda(z-a))^T(\Lambda(z-a)))}
+                           }
+                  \text{\quad where $a = \frac{\mu^0 - \mu^1}{2} $ and $z = x - \frac{\mu^0 + \mu^1}{2}$} \\
+               &= \frac{1} {1 + \exp\left( 
+                                          (\Lambda(z+a))^T(\Lambda(z+a)) - (\Lambda(z-a))^T(\Lambda(z-a))
+                                     \right)
+                           } \\
+               &= \frac{1} {1 + \exp\left( 
+                                          4(\Lambda a)^T(\Lambda z)
+                                     \right)
+                           } \\
+               &= \frac{1} {1 + \exp\left( 
+                                          4a^T\Sigma^{-1}(x - \frac{\mu^0 + \mu^1}{2})
+                                     \right)
+                           } \\
+               &= g(\theta^T x') 
+                  \text{\quad where $\theta^T = [(\mu^0-\mu^1)^T\Sigma^{-1}(\mu^0+\mu^1),2(\mu^1 - \mu^0)^T\Sigma^{-1}]$ and $x'= [1,x]$}
+  \end{split}
+\end{equation}
+\end{proof}
+
+\section{Softmax regression and OVA logistic regression}
+\subsection{3.1}
+\paragraph{Implementing the loss function for softmax regression (naive version)}
+------\\
+\begin{tiny}
+\begin{lstlisting}
+
+\end{lstlisting}
+\end{tiny}
+
+
+\end{document}
