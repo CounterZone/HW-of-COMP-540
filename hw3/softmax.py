@@ -160,8 +160,8 @@ def softmax_loss_naive(theta, X, y, reg):
 	p[j]=1/po
     	grad[:,j]-=X[i,:]*(float(y[i]==j)-p[j])/m
     J=J+np.log(p[y[i]])
-  J=-J/m+reg*np.sum(theta**2)
-  grad=grad+2*theta*reg
+  J=-J/m+(reg/2/m)*np.sum(theta**2)
+  grad=grad+ theta*reg/m
 
   #############################################################################
   #                          END OF YOUR CODE                                 #
@@ -203,8 +203,8 @@ def softmax_loss_vectorized(theta, X, y, reg):
   xt=X.dot(theta)
   Pt=np.exp(xt-np.max(xt,1).reshape([m,1]).dot(np.ones([1,theta.shape[1]])))
   P=Pt/Pt.sum(1).reshape([m,1]).dot(np.ones([1,theta.shape[1]]))
-  J=-1.0/m*np.sum(np.multiply(np.log(P),convert_y_to_matrix(y)))+reg*np.sum(theta**2)
-  grad=-1.0/m*X.T.dot((convert_y_to_matrix(y)-P))+2*theta*reg
+  J=-1.0/m*np.sum(np.multiply(np.log(P),convert_y_to_matrix(y)))+(reg/2/m)*np.sum(theta**2)
+  grad=-1.0/m*X.T.dot((convert_y_to_matrix(y)-P))+ theta*reg/m
 
   #############################################################################
   #                          END OF YOUR CODE                                 #
