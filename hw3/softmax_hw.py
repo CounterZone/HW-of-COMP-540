@@ -5,7 +5,7 @@ import utils
 from softmax import softmax_loss_naive, softmax_loss_vectorized
 from softmax import SoftmaxClassifier
 import time
-
+from sklearn.metrics import confusion_matrix
 
 
 
@@ -21,7 +21,7 @@ X_train, y_train, X_val, y_val, X_test, y_test = utils.get_CIFAR10_data()
 
 theta = np.random.randn(3073,10) * 0.0001
 
-'''
+
 
 loss, grad = softmax_loss_vectorized(theta, X_train, y_train, 0.0)
 
@@ -64,12 +64,12 @@ print 'Gradient difference: %f' % grad_difference
 # learning rate). You should experiment with different ranges for the learning
 # rates and regularization strengths; if you are careful you should be able to
 # get a classification accuracy of over 0.35 on the validation set and the test set.
-'''
+
 results = {}
 best_val = -1
 best_softmax = None
 learning_rates = [1e-7, 5e-7, 1e-6, 5e-6]
-regularization_strengths = [5e4, 1e5, 5e5, 1e8]
+regularization_strengths = [5e4, 1e5, 5e5, 1e6, 5e6]
 
 ################################################################################
 # TODO:                                                                        #
@@ -80,8 +80,9 @@ regularization_strengths = [5e4, 1e5, 5e5, 1e8]
 
 for lr in learning_rates:
 	for rs in regularization_strengths:
+		print("calculating: lr=%e,reg=%e"%(lr,rs))
 		ns=SoftmaxClassifier()
-		ns.train(X_train,y_train,lr,rs,verbose=True)
+		ns.train(X_train,y_train,lr,rs,verbose=True,batch_size=400,num_iters=2000)
 		ta=np.mean(y_train == ns.predict(X_train))
 		va=np.mean(y_val == ns.predict(X_val))
 		results[lr,rs]=(ta,va)
@@ -106,7 +107,7 @@ if best_softmax:
   y_test_pred = best_softmax.predict(X_test)
   test_accuracy = np.mean(y_test == y_test_pred)
   print 'softmax on raw pixels final test set accuracy: %f' % (test_accuracy, )
-
+  print confusion_matrix(y_test, y_test_pred)
   # Visualize the learned weights for each class
 
   theta = best_softmax.theta[1:,:].T # strip out the bias term

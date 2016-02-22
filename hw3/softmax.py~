@@ -69,7 +69,7 @@ class SoftmaxClassifier:
       # Hint: 1 line of code expected
 
       self.theta-=grad*learning_rate
-
+      print np.max(self.theta),
       #########################################################################
       #                       END OF YOUR CODE                                #
       #########################################################################

@@ -178,8 +178,8 @@ for i in range(0,m):\\
 	p[j]=1/po\\
     	grad[:,j]-=X[i,:]*(float(y[i]==j)-p[j])/m\\
     J=J+np.log(p[y[i]])\\
-  J=-J/m+reg*np.sum(theta**2)\\
-  grad=grad+2*theta*reg\\[10pt]
+  J=-J/m+reg*np.sum(theta**2)/2/m\\
+  grad=grad+theta*reg/m\\[10pt]
 result:\\[10pt]
 Training data shape:  (49000, 3072)\\
 Validation data shape:  (1000, 3072)\\
@@ -205,7 +205,7 @@ Implemented the \verb|softmax_loss_vectorized| method in file \verb|softmax.py|:
 xt=X.dot(theta)\\
 Pt=np.exp(xt-np.max(xt,1).reshape([m,1]).dot(np.ones([1,theta.shape[1]])))\\
 P=Pt/Pt.sum(1).reshape([m,1]).dot(np.ones([1,theta.shape[1]]))\\
-J=-1.0/m*np.sum(np.multiply(np.log(P),convert\_y\_to\_matrix(y)))+reg*np.sum(theta**2)\\ grad=-1.0/m*X.T.dot((convert\_y\_to\_matrix(y)-P))+2*theta*reg\\[10pt]
+J=-1.0/m*np.sum(np.multiply(np.log(P),convert\_y\_to\_matrix(y)))+reg*np.sum(theta**2)/2/m\\ grad=-1.0/m*X.T.dot((convert\_y\_to\_matrix(y)-P))+theta*reg/m\\[10pt]
 result:\\[10pt]
 naive loss: 2.331815e+00 computed in 2945.336793s\\
 vectorized loss: 2.331815e+00 computed in 7.681536s\\
@@ -221,5 +221,80 @@ index=np.random.choice(range(0,len(y)),size=batch\_size)\\
           y\_pred=np.argmax(X.dot(self.theta),1)\\[10pt]
 \subsection{Using a validation set to select regularization lambda and learning rate for gradient descent}
 \subsection{Training a softmax classifier with the best hyperparameters}
-
+Codes for selecting best learning rate and regularization factor:\\[10pt]
+for lr in learning\_rates:\\
+for rs in regularization\_strengths:\\
+		print("calculating: lr=%e,reg=%e"%(lr,rs))\\
+		ns=SoftmaxClassifier()\\
+		ns.train(X\_train,y\_train,lr,rs,verbose=True,batch\_size=400,num\_iters=2000)\\
+		ta=np.mean(y\_train == ns.predict(X\_train))\\
+		va=np.mean(y\_val == ns.predict(X\_val))\\
+		results[lr,rs]=(ta,va)\\
+		if va$>$best\_val:\\
+			best\_val=va\\
+			best\_softmax=ns\\[10pt]
+We noticed that if $\lambda$ is too large, the regularization term would be the major term in the gradient. That will cause the theta keep increasing with iteration. So we pick $\lambda$ in the set  [5e4, 1e5, 5e5, 1e6, 5e6].\\
+result:\\[10pt] 
+lr 1.000000e-07 reg 5.000000e+04 train accuracy: 0.229163 val accuracy: 0.246000\\
+lr 1.000000e-07 reg 1.000000e+05 train accuracy: 0.232490 val accuracy: 0.234000\\
+lr 1.000000e-07 reg 5.000000e+05 train accuracy: 0.233694 val accuracy: 0.228000\\
+lr 1.000000e-07 reg 1.000000e+06 train accuracy: 0.245714 val accuracy: 0.228000\\
+lr 1.000000e-07 reg 5.000000e+06 train accuracy: 0.299347 val accuracy: 0.325000\\
+lr 5.000000e-07 reg 5.000000e+04 train accuracy: 0.303429 val accuracy: 0.327000\\
+lr 5.000000e-07 reg 1.000000e+05 train accuracy: 0.306898 val accuracy: 0.320000\\
+lr 5.000000e-07 reg 5.000000e+05 train accuracy: 0.340245 val accuracy: 0.375000\\
+lr 5.000000e-07 reg 1.000000e+06 train accuracy: 0.367102 val accuracy: 0.384000\\
+lr 5.000000e-07 reg 5.000000e+06 train accuracy: 0.367959 val accuracy: 0.383000\\
+lr 1.000000e-06 reg 5.000000e+04 train accuracy: 0.337286 val accuracy: 0.328000\\
+lr 1.000000e-06 reg 1.000000e+05 train accuracy: 0.348980 val accuracy: 0.325000\\
+lr 1.000000e-06 reg 5.000000e+05 train accuracy: 0.394367 val accuracy: 0.385000\\
+lr 1.000000e-06 reg 1.000000e+06 train accuracy: 0.397102 val accuracy: 0.408000\\
+lr 1.000000e-06 reg 5.000000e+06 train accuracy: 0.364531 val accuracy: 0.370000\\
+lr 5.000000e-06 reg 5.000000e+04 train accuracy: 0.403082 val accuracy: 0.389000\\
+lr 5.000000e-06 reg 1.000000e+05 train accuracy: 0.395612 val accuracy: 0.407000\\
+lr 5.000000e-06 reg 5.000000e+05 train accuracy: 0.389490 val accuracy: 0.385000\\
+lr 5.000000e-06 reg 1.000000e+06 train accuracy: 0.364673 val accuracy: 0.349000\\
+lr 5.000000e-06 reg 5.000000e+06 train accuracy: 0.313286 val accuracy: 0.329000\\
+best validation accuracy achieved during cross-validation: 0.408000\\
+softmax on raw pixels final test set accuracy: 0.391400\\[10pt]
+An example of the iteration process(of the best classifier):\\
+iteration 0 / 2000: loss 42.672658\\
+iteration 100 / 2000: loss 24.842959\\
+iteration 200 / 2000: loss 15.769520\\
+iteration 300 / 2000: loss 10.091069\\
+iteration 400 / 2000: loss 6.778380\\
+iteration 500 / 2000: loss 4.788873\\
+iteration 600 / 2000: loss 3.589836\\
+iteration 700 / 2000: loss 2.930098\\
+iteration 800 / 2000: loss 2.454714\\
+iteration 900 / 2000: loss 2.182052\\
+iteration 1000 / 2000: loss 2.055547\\
+iteration 1100 / 2000: loss 1.979594\\
+iteration 1200 / 2000: loss 1.913994\\
+iteration 1300 / 2000: loss 1.864351\\
+iteration 1400 / 2000: loss 1.880269\\
+iteration 1600 / 2000: loss 1.748369\\
+iteration 1700 / 2000: loss 1.846359\\
+iteration 1800 / 2000: loss 1.843841\\
+iteration 1900 / 2000: loss 1.864423\\
+We noticed the loss starts to oscilate, which indicates 2000 iterations is enough.\\[10pt] 
+the confusion matrix:\\
+456  54  26  19  13  27  25  39 265  76\\
+ 67 442  18  34  14  33  60  37 120 175\\
+ 123  53 176  71 104  86 199  71  89  28\\
+  48  73  72 218  32 178 177  61  73  68\\
+  61  33 104  52 247  76 229 118  47  33\\
+  38  42  74 147  51 315 128  80 102  23\\
+  26  51  54  79  59  71 557  33  22  48\\
+  47  51  58  54  79  65  80 395  74  97\\
+ 114  68   9  25   6  35  10  13 605 115\\
+  71 144  11  33   7  14  51  43 133 493\\
+ The (i,j) factor of this matrix means the count of image in class i that is predicted to be in class j, and numbers on the diagonal is the number of correctly predicted image. We can see that the performance of each class are different. \\ 
+the visualized theta is shown in figure 1.\\
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{./cifar_theta}
+\caption{the visualized theta}
+\label{fig:figure}
+\end{figure}
 \end{document}
