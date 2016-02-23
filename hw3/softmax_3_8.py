@@ -1,5 +1,6 @@
 import numpy as np
 from random import shuffle
+from scipy import optimize
 import scipy.sparse
 
 class SoftmaxClassifier:
@@ -37,37 +38,18 @@ class SoftmaxClassifier:
       X_batch = None
       y_batch = None
 
-      #########################################################################
-      # TODO:                                                                 #
-      # Sample batch_size elements from the training data and their           #
-      # corresponding labels to use in this round of gradient descent.        #
-      # Store the data in X_batch and their corresponding labels in           #
-      # y_batch; after sampling X_batch should have shape (batch_size, dim)   #
-      # and y_batch should have shape (batch_size,)                           #
-      #                                                                       #
-      # Hint: Use np.random.choice to generate indices. Sampling with         #
-      # replacement is faster than sampling without replacement.              #
-      #########################################################################
-      # Hint: 3 lines of code expected
-      
       index=np.random.choice(range(0,len(y)),size=batch_size)
       X_batch=X[index,:]
       y_batch=y[index]
 
-
-      #########################################################################
-      #                       END OF YOUR CODE                                #
-      #########################################################################
 
       # evaluate loss and gradient
       loss, grad = self.loss(X_batch, y_batch, reg)
       
       # perform parameter update
       #########################################################################
-      # TODO:                                                                 #
       # Update the weights using the gradient and the learning rate.          #
       #########################################################################
-      # Hint: 1 line of code expected
       last_loss = np.mean(loss_history[-win_len:])
       loss_history.append(loss)
       curr_loss = np.mean(loss_history[-win_len:])
@@ -75,14 +57,11 @@ class SoftmaxClassifier:
         self.theta-=grad*learning_rate
         return it, loss_history
 
-      #########################################################################
-      #                       END OF YOUR CODE                                #
-      #########################################################################
-
       if verbose and it % 100 == 0:
         print 'iteration %d / %d: loss %f' % (it, num_iters, loss)
 
     return num_iters, loss_history
+    
     
   def train_fmin(self, X, y, reg=1e-5, num_iters=100):
     """
@@ -100,9 +79,9 @@ class SoftmaxClassifier:
     """
     num_train,dim = X.shape
     num_classes = np.max(y) + 1 # assume y takes values 0...K-1 where K is number of classes
-    self.theta = np.random.randn(dim,num_classes) * 0.001
+    theta = np.random.randn(dim,num_classes) * 0.001
     
-    self.theta = scipy.optimize.fmin_bfgs(softmax_fmin_loss, self.theta, fprime = softmax_fmin_grad_loss, args=(X,y,reg),maxiter=num_iters)
+    self.theta = scipy.optimize.fmin_bfgs(softmax_fmin_loss, theta, fprime = softmax_fmin_grad_loss, args=(X,y,reg),maxiter=num_iters)
 
     # evaluate loss and gradient
     loss, grad = self.loss(X, y, reg)
@@ -252,7 +231,7 @@ def softmax_fmin_loss(theta, X, y, reg):
 
   J = 0.0
   m, dim = X.shape
-
+  theta.reshape(dim,10)
   xt=X.dot(theta)
   Pt=np.exp(xt-np.max(xt,1).reshape([m,1]).dot(np.ones([1,theta.shape[1]])))
   P=Pt/Pt.sum(1).reshape([m,1]).dot(np.ones([1,theta.shape[1]]))
@@ -266,9 +245,9 @@ def softmax_fmin_grad_loss(theta, X, y, reg):
   Inputs and outputs are the same as softmax_loss_naive.
   """
   # Initialize the gradient to zero.
-
-  grad = np.zeros_like(theta)
   m, dim = X.shape
+  theta.reshape(dim,10)
+  grad = np.zeros_like(theta)
 
 
   xt=X.dot(theta)

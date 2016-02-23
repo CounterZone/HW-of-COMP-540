@@ -33,8 +33,6 @@ batch_sizes = [100, 200]
 learning_rates = [1e-7, 5e-7]
 regularization_strengths = [5e4, 1e5]
 '''
-batch_sizes = [100, 200, 400, 800, 1600, 3200, 6400]
-learning_rates = [1e-7, 5e-7, 1e-6, 5e-6]
 regularization_strengths = [5e4, 1e5, 5e5, 1e8]
 
 
@@ -42,37 +40,33 @@ regularization_strengths = [5e4, 1e5, 5e5, 1e8]
 # TODO:                                                                        #
 # Use the validation set to set the learning rate and regularization strength. #
 # Save the best trained softmax classifer in best_softmax.                     #
+# Hint: about 10 lines of code expected
 ################################################################################
 ns=SoftmaxClassifier()
 max_iters=8000
-tol=1e-4
-for bs in batch_sizes:
-    for lr in learning_rates:
-	for rs in regularization_strengths:
-		iterations = ns.train(X_train,y_train,lr,rs,max_iters,bs,tol,verbose=True)[0]
-		ta=np.mean(y_train == ns.predict(X_train))
-		va=np.mean(y_val == ns.predict(X_val))
-		results[bs,lr,rs]=(iterations,ta,va)
-		if va>best_val:
-			best_val=va
-			best_bs = bs
-			best_it = iterations
-			best_lr = lr
-			best_reg = rs
-			best_softmax=ns
-		print '\t---- FINISHED batch size: %e learning rate: %e reg: %e------' %(bs,lr,rs)
+
+for rs in regularization_strengths:
+    ns.train_fmin(X_train,y_train,rs,max_iters)
+    ta=np.mean(y_train == ns.predict(X_train))
+    va=np.mean(y_val == ns.predict(X_val))
+    results[rs]=(ta,va)
+    if va>best_val:
+	best_val=va
+	best_reg = rs
+	best_softmax=ns
+	print '\t---- FINISHED fmin with reg: %e------' %rs
 ################################################################################
 #                              END OF YOUR CODE                                #
 ################################################################################
     
 # Print out results.
-for bs, lr, reg in sorted(results):
-    iterations, train_accuracy, val_accuracy = results[(bs, lr, reg)]
-    print 'bs %e iterations %e lr %e reg %e train accuracy: %f val accuracy: %f' % (
-                bs, iterations, lr, reg, train_accuracy, val_accuracy)
+for rs in sorted(results):
+    train_accuracy, val_accuracy = results[(rs)]
+    print 'reg %e train accuracy: %f val accuracy: %f' % (
+                rs, train_accuracy, val_accuracy)
     
 print 'best validation accuracy achieved during cross-validation: %f' % best_val
-print '\t with bs %e iterations %e lr %e reg %e' % (best_bs,best_it,best_lr,best_reg)
+print '\t with reg %e' %best_reg
 
 
 
@@ -101,5 +95,5 @@ if best_softmax:
     plt.title(classes[i])
 
 
-  plt.savefig('cifar_theta_3_8.pdf')
+  plt.savefig('cifar_theta_3_8_fmin.pdf')
   plt.close()
