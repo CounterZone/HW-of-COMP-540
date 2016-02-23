@@ -1,5 +1,6 @@
 import numpy as np
 from random import shuffle
+from scipy import optimize
 import scipy.sparse
 
 class SoftmaxClassifier:
@@ -8,7 +9,7 @@ class SoftmaxClassifier:
     self.theta = None
 
   def train(self, X, y, learning_rate=1e-3, reg=1e-5, num_iters=100,
-            batch_size=200, verbose=False):
+            batch_size=200, tol=1e-5, verbose=False):
     """
     Train the classifier using mini-batch stochastic gradient descent.
 
@@ -18,8 +19,9 @@ class SoftmaxClassifier:
     - y: 1-dimensional array of length m with labels 0...K-1, for K classes.
     - learning_rate: (float) learning rate for optimization.
     - reg: (float) regularization strength.
-    - num_iters: (integer) number of steps to take when optimizing
+    - num_iters: (integer) maximum number of steps to take when optimizing
     - batch_size: (integer) number of training examples to use at each step.
+    - tol: (float) stop before num_iters if successive iteration loss is less than tol (tolerance)
     - verbose: (boolean) If true, print progress during optimization.
 
     Outputs:
@@ -30,54 +32,61 @@ class SoftmaxClassifier:
     self.theta = np.random.randn(dim,num_classes) * 0.001
 
     # Run stochastic gradient descent to optimize theta
-    loss_history = []
+    win_len = 5
+    loss_history = [np.inf]*win_len
     for it in xrange(num_iters):
       X_batch = None
       y_batch = None
 
-      #########################################################################
-      # TODO:                                                                 #
-      # Sample batch_size elements from the training data and their           #
-      # corresponding labels to use in this round of gradient descent.        #
-      # Store the data in X_batch and their corresponding labels in           #
-      # y_batch; after sampling X_batch should have shape (batch_size, dim)   #
-      # and y_batch should have shape (batch_size,)                           #
-      #                                                                       #
-      # Hint: Use np.random.choice to generate indices. Sampling with         #
-      # replacement is faster than sampling without replacement.              #
-      #########################################################################
-      # Hint: 3 lines of code expected
-      
       index=np.random.choice(range(0,len(y)),size=batch_size)
       X_batch=X[index,:]
       y_batch=y[index]
 
 
-      #########################################################################
-      #                       END OF YOUR CODE                                #
-      #########################################################################
-
       # evaluate loss and gradient
       loss, grad = self.loss(X_batch, y_batch, reg)
-      loss_history.append(loss)
-
+      
       # perform parameter update
       #########################################################################
-      # TODO:                                                                 #
       # Update the weights using the gradient and the learning rate.          #
       #########################################################################
-      # Hint: 1 line of code expected
-
-      self.theta-=grad*learning_rate
-
-      #########################################################################
-      #                       END OF YOUR CODE                                #
-      #########################################################################
+      last_loss = np.mean(loss_history[-win_len:])
+      loss_history.append(loss)
+      curr_loss = np.mean(loss_history[-win_len:])
+      if abs(last_loss - curr_loss) < tol:
+        self.theta-=grad*learning_rate
+        return it, loss_history
 
       if verbose and it % 100 == 0:
         print 'iteration %d / %d: loss %f' % (it, num_iters, loss)
 
-    return loss_history
+    return num_iters, loss_history
+    
+    
+  def train_fmin(self, X, y, reg=1e-5, num_iters=100):
+    """
+    Train the classifier using mini-batch stochastic gradient descent.
+
+    Inputs:
+    - X: m x d array of training data. Each training point is a d-dimensional
+         row.
+    - y: 1-dimensional array of length m with labels 0...K-1, for K classes.
+    - reg: (float) regularization strength.
+    - num_iters: (integer) maximum number of steps to take when optimizing
+
+    Outputs:
+    A list containing the value of the loss function at each training iteration.
+    """
+    num_train,dim = X.shape
+    num_classes = np.max(y) + 1 # assume y takes values 0...K-1 where K is number of classes
+    theta = np.random.randn(dim,num_classes) * 0.001
+    
+    self.theta = scipy.optimize.fmin_bfgs(softmax_fmin_loss, theta, fprime = softmax_fmin_grad_loss, args=(X,y,reg),maxiter=num_iters)
+
+    # evaluate loss and gradient
+    loss, grad = self.loss(X, y, reg)
+
+    return loss
 
   def predict(self, X):
     """
@@ -211,3 +220,39 @@ def softmax_loss_vectorized(theta, X, y, reg):
   #############################################################################
 
   return J, grad
+
+
+def softmax_fmin_loss(theta, X, y, reg):
+  """
+  Softmax loss function, vectorized version.
+  Inputs and outputs are the same as softmax_loss_naive.
+  """
+  # Initialize the loss to zero.
+
+  J = 0.0
+  m, dim = X.shape
+  theta.reshape(dim,10)
+  xt=X.dot(theta)
+  Pt=np.exp(xt-np.max(xt,1).reshape([m,1]).dot(np.ones([1,theta.shape[1]])))
+  P=Pt/Pt.sum(1).reshape([m,1]).dot(np.ones([1,theta.shape[1]]))
+  J=-1.0/m*np.sum(np.multiply(np.log(P),convert_y_to_matrix(y)))+(reg/2/m)*np.sum(theta**2)
+
+  return J
+  
+def softmax_fmin_grad_loss(theta, X, y, reg):
+  """
+  Softmax loss function, vectorized version.
+  Inputs and outputs are the same as softmax_loss_naive.
+  """
+  # Initialize the gradient to zero.
+  m, dim = X.shape
+  theta.reshape(dim,10)
+  grad = np.zeros_like(theta)
+
+
+  xt=X.dot(theta)
+  Pt=np.exp(xt-np.max(xt,1).reshape([m,1]).dot(np.ones([1,theta.shape[1]])))
+  P=Pt/Pt.sum(1).reshape([m,1]).dot(np.ones([1,theta.shape[1]]))
+  grad=-1.0/m*X.T.dot((convert_y_to_matrix(y)-P))+ theta*reg/m
+
+  return grad
