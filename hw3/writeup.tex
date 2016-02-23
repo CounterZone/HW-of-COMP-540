@@ -297,4 +297,20 @@ the visualized theta is shown in figure 1.\\
 \caption{the visualized theta}
 \label{fig:figure}
 \end{figure}
+
+\subsection{Experimenting with other hyper parameters and optimization method}
+Modified the implementation for \verb|train| method of \verb|SoftmaxClassifier| class in file \verb|softmax_3_8.py|.
+The \verb|train| method returns early (before max. iterations) if successive loss between iterations is less than tolerance.
+A code snippet from \verb|train| method
+\begin{small}
+\begin{lstlisting}
+      last_loss = np.mean(loss_history[-win_len:])
+      loss_history.append(loss)
+      curr_loss = np.mean(loss_history[-win_len:])
+      if abs(last_loss - curr_loss) < tol:
+        self.theta-=grad*learning_rate
+        return it, loss_history
+\end{lstlisting}
+\end{small}
+The corresponding script to evaulate batch size, learning rate, regularization parameter is in file \verb|softmax_hw_3_8.py|.
 \end{document}
