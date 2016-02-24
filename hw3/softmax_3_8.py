@@ -54,8 +54,9 @@ class SoftmaxClassifier:
       loss_history.append(loss)
       curr_loss = np.mean(loss_history[-win_len:])
       if abs(last_loss - curr_loss) < tol:
-        self.theta-=grad*learning_rate
         return it, loss_history
+        
+      self.theta-=grad*learning_rate
 
       if verbose and it % 100 == 0:
         print 'iteration %d / %d: loss %f' % (it, num_iters, loss)
@@ -81,8 +82,9 @@ class SoftmaxClassifier:
     num_classes = np.max(y) + 1 # assume y takes values 0...K-1 where K is number of classes
     theta = np.random.randn(dim,num_classes) * 0.001
     
-    self.theta = scipy.optimize.fmin_bfgs(softmax_fmin_loss, theta, fprime = softmax_fmin_grad_loss, args=(X,y,reg),maxiter=num_iters)
-
+    opt_theta = scipy.optimize.fmin_bfgs(softmax_fmin_loss, theta, fprime = softmax_fmin_grad_loss, args=(X,y,reg),maxiter=num_iters)
+    
+    self.theta = opt_theta.reshape(dim,num_classes)
     # evaluate loss and gradient
     loss, grad = self.loss(X, y, reg)
 
