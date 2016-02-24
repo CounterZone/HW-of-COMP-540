@@ -308,9 +308,87 @@ A code snippet from \verb|train| method
       loss_history.append(loss)
       curr_loss = np.mean(loss_history[-win_len:])
       if abs(last_loss - curr_loss) < tol:
+<<<<<<< HEAD
         self.theta-=grad*learning_rate
         return it, loss_history
 \end{lstlisting}
 \end{small}
 The corresponding script to evaulate batch size, learning rate, regularization parameter is in file \verb|softmax_hw_3_8.py|.
+=======
+        return it, loss_history
+        
+      self.theta-=grad*learning_rate
+\end{lstlisting}
+\end{small}
+The corresponding script to evaulate batch size, learning rate, regularization parameter is in file \verb|softmax_hw_3_8.py|.
+The output from above script is in file \verb|softmax_hw_3.8.out|. From it, we see that best hyper parameters are
+\begin{itemize}
+	\item batch size = 800
+	\item iterations $\sim$ 1000
+	\item learning rate = 1e-6
+	\item regularization strength = 1e+6
+	\item validation accuracy = 0.4020
+	\item test accuracy = 0.3837
+\end{itemize}
+
+\subsection{Comparing OVA binary logistic regression with softmax regression on music genre classification}
+The script is in \verb|softmax_music.py|. The results are
+\begin{lstlisting}
+	[[ 7  0  0  0  0  1  2  0  1  2]
+	 [ 2 12  0  0  0  1  0  0  1  0]
+	 [ 3  0 10  2  0  5  0  2  1  2]
+	 [ 0  0  0 15  3  0  2  2  2  5]
+	 [ 1  0  0  1 12  0  2  3  3  0]
+	 [ 2  1  0  1  2  7  0  1  2  1]
+	 [ 1  0  0  0  1  0 11  0  0  0]
+	 [ 0  0  0  0  0  0  0 20  1  0]
+	 [ 1  0  4  1  4  2  1  0  9  1]
+	 [ 6  0  0  2  1  2  3  3  2  2]]
+	--- Overall accuracy with Mel Cepstral representation 0.525
+	--- Genre =  blues  accuracy with Mel Cepstral representation 0.538461538462
+	--- Genre =  classical  accuracy with Mel Cepstral representation 0.75
+	--- Genre =  country  accuracy with Mel Cepstral representation 0.4
+	--- Genre =  disco  accuracy with Mel Cepstral representation 0.51724137931
+	--- Genre =  hiphop  accuracy with Mel Cepstral representation 0.545454545455
+	--- Genre =  jazz  accuracy with Mel Cepstral representation 0.411764705882
+	--- Genre =  metal  accuracy with Mel Cepstral representation 0.846153846154
+	--- Genre =  pop  accuracy with Mel Cepstral representation 0.952380952381
+	--- Genre =  reggae  accuracy with Mel Cepstral representation 0.391304347826
+	--- Genre =  rock  accuracy with Mel Cepstral representation 0.0952380952381
+\end{lstlisting}
+
+Table~\ref{table:3.8ova} compares performace of softmax and OVA classifier (from homework 2).
+
+\begin{table}[h]
+\caption{Compare OVA and softmax classifier for music genres} \centering
+\begin{tabular}{|l|l|l|}
+\hline
+Music Genre & Softmax & OVA\\
+\hline\hline
+Overall accuracy & 0.52 & 0.56 \\
+blues  & 0.54 & 0.54 \\
+
+classical  & 0.75 & 0.91\\
+
+country  & 0.40 & 0.48 \\
+
+disco  & 0.52 & 0.31 \\
+
+hiphop  & 0.54 & 0.48 \\
+
+jazz  & 0.41 & 0.31 \\
+
+metal  & 0.85 & 0.88 \\
+
+pop & 0.95 & 0.95 \\
+
+reggae & 0.39 & 0.30 \\
+
+rock & 0.95 & 0.71 \\
+\hline
+\end{tabular} \label{table:3.8ova}
+\end{table}
+
+We see that OVA is not good for the genres disco, hiphop and rock.
+>>>>>>> 27db11d... finished report except for 3.8_fmin
 \end{document}
