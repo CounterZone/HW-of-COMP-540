@@ -29,13 +29,14 @@ best_lr = -1
 best_reg = -1
 best_softmax = None
 '''
-batch_sizes = [100, 200]
-learning_rates = [1e-7, 5e-7]
-regularization_strengths = [5e4, 1e5]
+batch_sizes = [400]
+learning_rates = [5e-6]
+regularization_strengths = [1e5]
 '''
 batch_sizes = [100, 200, 400, 800, 1600, 3200, 6400]
 learning_rates = [1e-7, 5e-7, 1e-6, 5e-6]
-regularization_strengths = [5e4, 1e5, 5e5, 1e8]
+regularization_strengths = [5e4, 1e5, 5e5, 1e6, 5e6]
+
 
 
 ################################################################################
@@ -66,6 +67,7 @@ for bs in batch_sizes:
 ################################################################################
     
 # Print out results.
+print'**********results for 3.8*************'
 for bs, lr, reg in sorted(results):
     iterations, train_accuracy, val_accuracy = results[(bs, lr, reg)]
     print 'bs %e iterations %e lr %e reg %e train accuracy: %f val accuracy: %f' % (
