@@ -19,12 +19,12 @@ X,y = utils.load_mat('data/ex4data1.mat')
 utils.plot_twoclass_data(X,y,'x1', 'x2',['neg','pos'])
 plt.savefig('fig1.pdf')
 
-
+'''
 ############################################################################
 #  Part 1: Hinge loss function and gradient                                #
 ############################################################################
 
-C = 1
+C = 1.0
 theta = np.zeros((X.shape[1],))
 J,grad = linear_svm.svm_loss_twoclass(theta,X,y,C)
 
@@ -57,7 +57,7 @@ yy[y == 0] = -1
 # You will change this line to vary C.                                     #
 ############################################################################
 
-C = 1
+C = 100.0
 
 ############################################################################
 
@@ -86,7 +86,7 @@ plt.savefig('fig2.pdf')
 
 x1 = np.array([1,2,1])
 x2 = np.array([0,4,-1])
-sigma = 2
+sigma = 2.0
 
 print "Guassian kernel value (should be around 0.324652) = ", utils.gaussian_kernel(x1,x2,sigma)
 
@@ -125,7 +125,7 @@ yy[y == 0] = -1
 
 svm = LinearSVM_twoclass()
 svm.theta = np.zeros((KK.shape[1],))
-C = 1
+C = 1.0
 svm.train(KK,yy,learning_rate=1e-4,C=C,num_iters=20000,verbose=True)
 
 # visualize the boundary
@@ -133,6 +133,8 @@ svm.train(KK,yy,learning_rate=1e-4,C=C,num_iters=20000,verbose=True)
 utils.plot_decision_kernel_boundary(X,y,scaler,sigma,svm,'','',['neg','pos'])
 plt.savefig("fig4.pdf")
 
+
+'''
 ############################################################################
 #  Part  4: Training SVM with a kernel                                     #
 #  Select hyperparameters C and sigma                                      #
@@ -197,3 +199,4 @@ svm.train(KK,yy,learning_rate=1e-4,C=best_C,num_iters=20000,verbose=False)
 
 utils.plot_decision_kernel_boundary(X,y,scaler,best_sigma,svm,'','',['neg','pos'])
 plt.savefig("fig6.pdf")
+
