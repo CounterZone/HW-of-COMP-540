@@ -1,0 +1,100 @@
+\documentclass{article}
+\usepackage{ listings} 
+\usepackage{amsmath}
+\usepackage{float} 
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{geometry}
+\usepackage{amsthm}
+\usepackage{amssymb}
+
+\begin{document}
+\title{Solution to Homework 4}
+\author{Shoeb Mohammed and Zhuo Chen}
+\maketitle
+
+\newcommand{\QEDA}{\hfill\ensuremath{\blacksquare}}
+\newcommand{\QEDB}{\hfill\ensuremath{\square}}
+
+\section{Kernelizing the perceptron}
+\begin{equation*}
+	\mathcal{D} = \{x^{(i)} | 1 \leq i \leq m\, y^{(i)} \in \{-1,1\}\} 
+\end{equation*}
+
+\begin{equation}
+	\label{eq:1.1}
+    \theta^{(i)} \leftarrow \theta^{(i-1)} - [h_{\theta^{(i-1)}}(x^{(i)}) - y^{(i)}]x^{(i)}
+\end{equation}
+
+\subsection{}
+From equation~\ref{eq:1.1}, it is clear that $\theta$ is a linear combination of vectors $x^{(i)}$.
+Thus, $\theta$ can be implicitly represented by the weights $\alpha_i$ in
+\begin{equation}
+	\label{eq:1.2}
+    \theta = \sum_{i=1}^{m} \alpha_i \phi(x^{(i)})
+\end{equation}
+The $\alpha_i$ are dual variables and initialized to zero.
+
+\subsection{}
+From equation~\ref{eq:1.2} it follows that
+\begin{equation}
+  \label{eq:1.3}
+  \begin{split}
+  h_{\theta^{(i)}}(\phi(x^{(i+1)})) &= sign\left(\theta^{(i)^T}\phi(x^{(i+1)})\right) \\
+                  &= sign\left(\sum_{j=1}^{m} \alpha_j \phi(x^{(j)})^T \phi(x^{(i+1)})\right) \\
+				  &= sign\left(\sum_{j=1}^{m} \alpha_j K( x^{(j)}, x^{(i+1)} )\right)
+  \end{split}
+\end{equation}
+In equation~\ref{eq:1.2}, during training, $\alpha_j = 0$ for $j > i$.
+
+
+\subsection{}
+For a new training example, we use the update rule
+\begin{equation}
+  \label{eq:1.3}
+  \begin{split}
+   \alpha_{i+1} &\leftarrow h_{\theta^{(i)}}(\phi(x^{(i+1)})) - y^{(i)} \\
+   			&\leftarrow sign\left(\sum_{j=1}^{m} \alpha_j K( x^{(j)}, x^{(i+1)} )\right) - y^{(i)}
+  \end{split}
+\end{equation}
+In equation~\ref{eq:1.3}, during training, $\alpha_j = 0$ for $j > i$.
+
+
+\section{Fitting an SVM classifier by hand}
+\begin{equation*}
+	\mathcal{D} = \{ (0,-1) , (\sqrt{2},+1) \} 
+\end{equation*}
+\begin{equation*}
+	\phi(x) = (0,\sqrt{2}x,x^2) 
+\end{equation*}
+We fit a maximum margin classifier for $\mathcal{D}$ and features $\phi(x)$.
+
+\subsection{}
+The vector $v$ along the line joining the two points is parallel to optimal vector $\theta$.
+\begin{equation*}
+	v = (0,2,2)
+\end{equation*}
+
+\subsection{}
+The value of the margin is $2\sqrt{2}$.
+
+\subsection{}
+\begin{equation*}
+	\theta = (0,1,1)
+\end{equation*}
+
+\subsection{}
+\begin{equation*}
+	\theta_0 = 2
+\end{equation*}
+
+\subsection{}
+The equation for decision boundary is
+\begin{equation*}
+	\theta^T \phi(x) = 2
+\end{equation*}
+
+\section{Support vector machines for binary classification}
+
+
+\end{document}
