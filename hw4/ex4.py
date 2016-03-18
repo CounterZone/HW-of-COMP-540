@@ -19,7 +19,6 @@ X,y = utils.load_mat('data/ex4data1.mat')
 utils.plot_twoclass_data(X,y,'x1', 'x2',['neg','pos'])
 plt.savefig('fig1.pdf')
 
-'''
 ############################################################################
 #  Part 1: Hinge loss function and gradient                                #
 ############################################################################
@@ -134,7 +133,6 @@ utils.plot_decision_kernel_boundary(X,y,scaler,sigma,svm,'','',['neg','pos'])
 plt.savefig("fig4.pdf")
 
 
-'''
 ############################################################################
 #  Part  4: Training SVM with a kernel                                     #
 #  Select hyperparameters C and sigma                                      #
@@ -161,11 +159,13 @@ plt.savefig('fig5.pdf')
 # Xval and yval                                                            #
 ############################################################################
 
-Cvals = [0.01,0.03,0.1,0.3,10,30]
-sigma_vals = [0.01,0.03,0.1,0.3,10,30]
+Cvals = [0.01,0.03,0.1,0.3,1,3,10,30]
+sigma_vals = [0.01,0.03,0.1,0.3,1,3,10,30]
 
+'''
 best_C = 0.01
 best_sigma = 0.01
+'''
 
 ############################################################################
 # TODO                                                                     #
@@ -178,8 +178,39 @@ best_sigma = 0.01
 # about 15 lines of code expected to get best_C and best_sigma             #
 # your code should determine best_C and best_sigma                         #
 ############################################################################
-
-
+best_C = None
+best_sigma = None
+results = {}
+best_val = -1
+for sigma in sigma_vals:   
+        # kernelize X
+	K = np.array([utils.gaussian_kernel(x1,x2,sigma) for x1 in X for x2 in X]).reshape(X.shape[0],X.shape[0])
+	scaler = preprocessing.StandardScaler().fit(K)
+	scaleK = scaler.transform(K)
+	KK = np.vstack([np.ones((scaleK.shape[0],)),scaleK]).T
+	# kernelize Xval
+	Kval = np.array([utils.gaussian_kernel(x1,x2,sigma) for x1 in Xval for x2 in X]).reshape(Xval.shape[0],X.shape[0])
+	scaler_val = preprocessing.StandardScaler().fit(Kval)
+	scaleKval = scaler_val.transform(Kval)
+	KKval = np.vstack([np.ones((scaleKval.shape[0],)),scaleKval.T]).T
+	
+        for C in Cvals:
+		print("Training: C=%e,sigma=%e"%(C,sigma))		
+		# set up the SVM and learn the parameters
+		svm = LinearSVM_twoclass()
+		svm.theta = np.zeros((KK.shape[1],))
+		svm.train(KK,yy,learning_rate=1e-4,C=C,num_iters=20000,verbose=True)
+		
+		# calculate validation accuracy
+		va=np.mean(yyval == svm.predict(KKval))
+		results[C,sigma]=va
+		if va>best_val:
+			best_val=va
+			best_C=C
+			best_sigma = sigma
+if(best_C and best_sigma):
+        print("*****Problem 3.2******")
+        print("Best C = %e Best sigma = %e with validation accuracy = %e"%(best_C,best_sigma,results[best_C,best_sigma]))
 ############################################################################
 #   end of your code                                                       #
 ############################################################################
