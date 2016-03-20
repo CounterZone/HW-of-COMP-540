@@ -63,7 +63,7 @@ C = 1
 
 svm = LinearSVM_twoclass()
 svm.theta = np.zeros((XX.shape[1],))
-svm.train(XX,yy,learning_rate=1e-4,C=C,num_iters=50000,verbose=True)
+svm.train(XX,yy,learning_rate=1e-4,C=C,num_iters=50000,verbose=False)
 
 # classify the training data
 
@@ -125,8 +125,13 @@ yy[y == 0] = -1
 
 svm = LinearSVM_twoclass()
 svm.theta = np.zeros((KK.shape[1],))
+<<<<<<< HEAD
 C = 1
 svm.train(KK,yy,learning_rate=1e-4,C=C,num_iters=20000,verbose=True)
+=======
+C = 1.0
+svm.train(KK,yy,learning_rate=1e-4,C=C,num_iters=20000,verbose=False)
+>>>>>>> 90033ce... 3.3 completed3.3 completed3.3 completed
 
 # visualize the boundary
 
@@ -176,8 +181,44 @@ best_sigma = 0.01
 # about 15 lines of code expected to get best_C and best_sigma             #
 # your code should determine best_C and best_sigma                         #
 ############################################################################
+<<<<<<< HEAD
 
 
+=======
+best_C = None
+best_sigma = None
+results = {}
+best_val = -1
+for sigma in sigma_vals:   
+        # kernelize X
+	K = np.array([utils.gaussian_kernel(x1,x2,sigma) for x1 in X for x2 in X]).reshape(X.shape[0],X.shape[0])
+	scaler = preprocessing.StandardScaler().fit(K)
+	scaleK = scaler.transform(K)
+	KK = np.vstack([np.ones((scaleK.shape[0],)),scaleK]).T
+	# kernelize Xval
+	Kval = np.array([utils.gaussian_kernel(x1,x2,sigma) for x1 in Xval for x2 in X]).reshape(Xval.shape[0],X.shape[0])
+	scaler_val = preprocessing.StandardScaler().fit(Kval)
+	scaleKval = scaler_val.transform(Kval)
+	KKval = np.vstack([np.ones((scaleKval.shape[0],)),scaleKval.T]).T
+	
+        for C in Cvals:
+		print("Training: C=%e,sigma=%e"%(C,sigma))		
+		# set up the SVM and learn the parameters
+		svm = LinearSVM_twoclass()
+		svm.theta = np.zeros((KK.shape[1],))
+		svm.train(KK,yy,learning_rate=1e-4,C=C,num_iters=20000,verbose=False)
+		
+		# calculate validation accuracy
+		va=np.mean(yyval == svm.predict(KKval))
+		results[C,sigma]=va
+		if va>best_val:
+			best_val=va
+			best_C=C
+			best_sigma = sigma
+if(best_C and best_sigma):
+        print("*****Problem 3.2******")
+        print("Best C = %e Best sigma = %e with validation accuracy = %e"%(best_C,best_sigma,results[best_C,best_sigma]))
+>>>>>>> 90033ce... 3.3 completed3.3 completed3.3 completed
 ############################################################################
 #   end of your code                                                       #
 ############################################################################

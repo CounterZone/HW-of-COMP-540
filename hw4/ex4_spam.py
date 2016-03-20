@@ -1,9 +1,10 @@
 from sklearn import preprocessing, metrics
+from sklearn.cross_validation import *
 import utils
 import scipy.io
 import numpy as np
 from linear_classifier import LinearSVM_twoclass
-
+import matplotlib.pyplot as plt
 
 #############################################################################
 # load the SPAM email training and test dataset                             #
@@ -12,7 +13,6 @@ from linear_classifier import LinearSVM_twoclass
 X,y = utils.load_mat('data/spamTrain.mat')
 yy = np.ones(y.shape)
 yy[y==0] = -1
-
 test_data = scipy.io.loadmat('data/spamTest.mat')
 X_test = test_data['Xtest']
 y_test = test_data['ytest'].flatten()
@@ -27,11 +27,58 @@ y_test = test_data['ytest'].flatten()
 
 svm = LinearSVM_twoclass()
 svm.theta = np.zeros((X.shape[1],))
+# Experiment to find best C ,learning rate and number of iterations (no kernal)
+
+# X_train, X_val, y_train, y_val = train_test_split(X, yy, test_size=0.2)
+# iters=list(np.array(range(801))*5)
+# trace={}
+# for lr in [0.01,0.05,0.1,0.5]:
+# 	trace[lr]=[]
+# 	svm.theta = np.zeros((X.shape[1],))
+# 	trace[lr].append(metrics.accuracy_score(y_val,svm.predict(X_val)))
+# 	for i in range(0,800):
+# 		svm.train(X_train,y_train,learning_rate=lr,C=0.1,num_iters=5,verbose=False)
+# 		a=metrics.accuracy_score(y_val,svm.predict(X_val))
+# 		trace[lr].append(a)
+# 		print("%.2f,%d,%f\d"%(lr,i,a))
+# 	plt.plot(iters,trace[lr],label="lr=%.2f"%lr)
+# plt.xlabel("iterations")
+# plt.ylabel("Accurancy on validation set")
+# plt.legend(bbox_to_anchor=(0.9, 0.9))
+# plt.savefig("no_kernal_lr.pdf")
+
+# Experiment to find best sigma(kernalized)
+X_train, X_val, y_train, y_val = train_test_split(X, yy, test_size=0.2)
+
+iters=list(np.array(range(1601))*5)
+trace={}
+for sigma in [10]:
+	trace[sigma]=[]
+	K=metrics.pairwise.rbf_kernel(X_train,X_train,1/sigma**2)
+	scaler = preprocessing.StandardScaler().fit(K)
+	scaleK = scaler.transform(K)
+	KK = np.vstack([np.ones((scaleK.shape[0],)),scaleK]).T
+	Kval=metrics.pairwise.rbf_kernel(X_val,X_train,1/sigma**2)
+	scaler_val = preprocessing.StandardScaler().fit(Kval)
+	scaleKval = scaler_val.transform(Kval)
+	KKval = np.vstack([np.ones((scaleKval.shape[0],)),scaleKval.T]).T
+	svm.theta = np.zeros((KK.shape[1],))
+ 	trace[sigma].append(metrics.accuracy_score(y_val,svm.predict(KKval)))
+	for i in range(0,1600):
+		svm.train(KK,y_train,learning_rate=0.01,C=2,num_iters=5,verbose=True)
+ 		a=metrics.accuracy_score(y_train,svm.predict(KK))
+		b=metrics.accuracy_score(y_val,svm.predict(KKval))
+		trace[sigma].append(a)
+ 		print("%.2f,%d,%f,%f\d"%(sigma,i,a,b))
+	plt.plot(iters,trace[sigma],label="sigma=%.2f"%sigma)
+plt.xlabel("iterations")
+plt.ylabel("Accurancy on validation set")
+plt.legend(bbox_to_anchor=(0.9, 0.9))
+plt.savefig("kernal_sigma.pdf")
 
 
-C = 1
+#svm.train(X,yy,learning_rate=0.1,C=0.1,num_iters=2000,verbose=True)
 
-svm.train(X,yy,learning_rate=1e-1,C=C,num_iters=8000,verbose=True)
 
 #############################################################################
 #  end of your code                                                         #
