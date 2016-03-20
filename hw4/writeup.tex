@@ -101,9 +101,18 @@ The equation for decision boundary is
 \subsubsection{Example dataset 1: impact of varying C}
 \begin{itemize}
 	\item Checked loss function and gradient with the values in the homework.
-	\item Verified decision boundary with C=100. It matches the boundary in homework figure 3.
+	\item Verified decision boundary with C=1 and C=100. It matches the boundary in homework figure 3.
 \end{itemize}
-
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{./fig2}
+	\caption{decision boundary with C=100}\label{fig:3.11}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{./fig2_1}
+	\caption{decision boundary with C=1}\label{fig:3.12}
+\end{figure}
 \subsubsection{Gaussian kernel}
 \begin{itemize}
 	\item Implemented the Gaussian kernel.
@@ -129,10 +138,45 @@ The decision boundary is plotted in figure~\ref{fig:3.2}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1\linewidth]{./fig6}
-	\caption{decision boundary with best $C=0.01$ and best $\sigma = 0.01$}\label{fig:3.2}
+	\caption{decision boundary with best $C=0.1$ and best $\sigma = 0.1$}\label{fig:3.2}
 \end{figure}
 
 
 \subsection{Spam Classification with SVMs}
+To find best C, learning rate and number of iterations, we devided the training set(4000) to training set(3200) and validation set(800), and did some experiments.\\
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{./no_kernal_C.pdf}
+	\caption{How the performance on validation set changes with iteration. Here we set learning rate to 0.1 and vary C. We can see that the performance of c=0.05,0.1 and 0.5 are similar, while when C=1 the model is overfitted.}\label{fig:3.31}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{./no_kernal_lr.pdf}
+	\caption{Set C to 0.1 and vary learning rate. According to this figure I think if we set learning rate to 0.1, 2000 iterations will be enough. }\label{fig:3.31}
+\end{figure}
+
+Set C to 0.1 and learning rate to 0.1, with 2000 iterations, we will get:\\
+\begin{lstlisting}
+	Accuracy of model on training data is:  0.98025
+	Accuracy of model on test data is:  0.981
+	Top 15 predictors of spam are: 
+	click
+	remov
+	our
+	here
+	your
+	pleas
+	basenumb
+	guarante
+	will
+	you
+	email
+	nbsp
+	free
+	offer
+	hour
+
+\end{lstlisting}
+Then we test the RBF-kernalized condition. (kernal matrix is generated using sklearn) We tried different sigma, but the performance of all sigma is much worse than unkernalized model(accurancy on validation set is less than 0.8). I think it's because the weight of each word is different, but when the data is kernalized, this difference doesn't exist. So in this problem, the data should not be kernalized.
 \end{document}

@@ -62,7 +62,7 @@ C = 100.0
 
 svm = LinearSVM_twoclass()
 svm.theta = np.zeros((XX.shape[1],))
-svm.train(XX,yy,learning_rate=1e-4,C=C,num_iters=50000,verbose=True)
+svm.train(XX,yy,learning_rate=1e-4,C=C,num_iters=50000,verbose=False)
 
 # classify the training data
 
@@ -125,7 +125,7 @@ yy[y == 0] = -1
 svm = LinearSVM_twoclass()
 svm.theta = np.zeros((KK.shape[1],))
 C = 1.0
-svm.train(KK,yy,learning_rate=1e-4,C=C,num_iters=20000,verbose=True)
+svm.train(KK,yy,learning_rate=1e-4,C=C,num_iters=20000,verbose=False)
 
 # visualize the boundary
 
@@ -199,7 +199,7 @@ for sigma in sigma_vals:
 		# set up the SVM and learn the parameters
 		svm = LinearSVM_twoclass()
 		svm.theta = np.zeros((KK.shape[1],))
-		svm.train(KK,yy,learning_rate=1e-4,C=C,num_iters=20000,verbose=True)
+		svm.train(KK,yy,learning_rate=1e-4,C=C,num_iters=20000,verbose=False)
 		
 		# calculate validation accuracy
 		va=np.mean(yyval == svm.predict(KKval))
