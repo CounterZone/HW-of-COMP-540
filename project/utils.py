@@ -17,3 +17,5 @@ def output(y,fname="predict.csv"):
 	for i in range(len(y)):
 		f.write("%d,"%i+labels[y[i]]+"\n")
 	f.close()
+
+

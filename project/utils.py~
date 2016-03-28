@@ -12,8 +12,11 @@ def load_test():
 	for i in range(2,31):
 		x=np.vstack([x,cPickle.load(open("data/test/test_%d"%i,"rb"))])
 	return x
-def output(y,fname="predict.cls"):
+<<<<<<< HEAD
+def output(y,fname="predict.csv"):
 	f=open(fname,"w")
 	for i in range(len(y)):
 		f.write("%d,"%i+labels[y[i]]+"\n")
 	f.close()
+=======
+>>>>>>> 2d3237a0a79ffbbc1b9917cf1e10196aa8641882
