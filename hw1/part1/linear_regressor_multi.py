@@ -41,8 +41,11 @@ class LinearRegressor_Multi:
             # Update the parameters using the gradient and the learning rate.       #
             #   One line of code expected
             #########################################################################
+<<<<<<< HEAD
             
             self.theta=self.theta-learning_rate*grad
+=======
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
 
             #########################################################################
@@ -88,7 +91,11 @@ class LinearRegressor_Multi:
         # Implement this method. Store the predicted outputs in y_pred.           #
         #  One line of code expected                                              #
         ###########################################################################
+<<<<<<< HEAD
         y_pred=np.dot(self.theta,X.transpose())
+=======
+
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
         ###########################################################################
         #                           END OF YOUR CODE                              #
@@ -106,7 +113,11 @@ class LinearRegressor_Multi:
         #  One line of code expected                                              #
         ###########################################################################
 
+<<<<<<< HEAD
         theta_n = np.dot(np.dot(np.asmatrix(np.dot(X.T,X)).I,X.T),y)
+=======
+        theta_n = np.zeros((X.shape[1],))
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
         ###########################################################################
 
@@ -132,9 +143,13 @@ class LinearReg_SquaredLoss(LinearRegressor_Multi):
         # Calculate J (loss) and grad (gradient) wrt to X,y, and self.theta.      #
         #  2-3 lines of code expected                                             #
         ###########################################################################
+<<<<<<< HEAD
         
         J=((np.dot(self.theta,X.transpose())-y)**2).mean()/2
         grad=np.dot((np.dot(self.theta,X.transpose())-y),X)/X.shape[0]
+=======
+
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
 
         ###########################################################################

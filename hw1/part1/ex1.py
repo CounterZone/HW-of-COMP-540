@@ -91,7 +91,11 @@ plt.savefig('fig4.pdf')
 #         One line of code expected; replace line pred_cost = 0           #
 ###########################################################################
 
+<<<<<<< HEAD
 pred_cost = linear_reg1.predict(np.array([1,5]))*10000
+=======
+pred_cost = 0
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 print 'For lower status percentage = 5, we predict a median home value of', pred_cost
 
 ###########################################################################
@@ -100,7 +104,11 @@ print 'For lower status percentage = 5, we predict a median home value of', pred
 #      One line of code expected, replace pred_cost = 0                   #
 ###########################################################################
 
+<<<<<<< HEAD
 pred_cost = linear_reg1.predict(np.array([1,50]))*10000
+=======
+pred_cost = 0
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 print 'For lower status percentage = 50, we predict a median home value of',pred_cost
 
 ########################################################################

@@ -1,11 +1,15 @@
 import random
 import numpy as np
 import matplotlib.pyplot as plt
+<<<<<<< HEAD
 import music_utils
+=======
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 import utils
 from softmax import softmax_loss_naive, softmax_loss_vectorized
 from softmax import SoftmaxClassifier
 import time
+<<<<<<< HEAD
 from sklearn.metrics import confusion_matrix
 from sklearn import cross_validation
 # TODO: Get the music dataset (CEFS representation) [use code from Hw2]
@@ -18,18 +22,26 @@ genres = ["blues","classical","country","disco","hiphop","jazz","metal","pop","r
 # select the CEPS or FFT representation
 
 X,y = music_utils.read_ceps(genres,MUSIC_DIR)
+=======
+
+# TODO: Get the music dataset (CEFS representation) [use code from Hw2]
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
 
 # TODO: Split into train, validation and test sets 
 
+<<<<<<< HEAD
 X_tr, X_test, y_tr, y_test = cross_validation.train_test_split(X, y, test_size=0.2)
 X_train,X_val,y_train,y_val= cross_validation.train_test_split(X_tr, y_tr, test_size=0.1)
 
+=======
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
 # TODO: Use the validation set to tune hyperparameters for softmax classifier
 # choose learning rate and regularization strength (use the code from softmax_hw.py)
 
 
+<<<<<<< HEAD
 results = {}
 best_val = -1
 best_softmax = None
@@ -84,3 +96,10 @@ for i in range(0,10):
 
 
 
+=======
+# TODO: Evaluate best softmax classifier on set aside test set (use the code from softmax_hw.py)
+
+
+# TODO: Compare performance against OVA classifier of Homework 2 with the same
+# train, validation and test sets (use sklearn's classifier evaluation metrics)
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d

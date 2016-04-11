@@ -5,9 +5,12 @@ import utils
 from softmax import softmax_loss_naive, softmax_loss_vectorized
 from softmax import SoftmaxClassifier
 import time
+<<<<<<< HEAD
 from sklearn.metrics import confusion_matrix
 
 
+=======
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
 # Get the CIFAR-10 data broken up into train, validation and test sets
 
@@ -20,10 +23,14 @@ X_train, y_train, X_val, y_val, X_test, y_test = utils.get_CIFAR10_data()
 # Generate a random softmax theta matrix and use it to compute the loss.
 
 theta = np.random.randn(3073,10) * 0.0001
+<<<<<<< HEAD
 
 
 
 loss, grad = softmax_loss_vectorized(theta, X_train, y_train, 0.0)
+=======
+loss, grad = softmax_loss_naive(theta, X_train, y_train, 0.0)
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
 # Loss should be something close to - log(0.1)
 
@@ -41,7 +48,10 @@ grad_numerical = grad_check_sparse(f, theta, grad, 10)
 # The two versions should compute the same results, but the vectorized version should be
 # much faster.
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 tic = time.time()
 loss_naive, grad_naive = softmax_loss_naive(theta, X_train, y_train, 0.00001)
 toc = time.time()
@@ -69,7 +79,11 @@ results = {}
 best_val = -1
 best_softmax = None
 learning_rates = [1e-7, 5e-7, 1e-6, 5e-6]
+<<<<<<< HEAD
 regularization_strengths = [5e4, 1e5, 5e5, 1e6, 5e6]
+=======
+regularization_strengths = [5e4, 1e5, 5e5, 1e8]
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
 ################################################################################
 # TODO:                                                                        #
@@ -78,6 +92,7 @@ regularization_strengths = [5e4, 1e5, 5e5, 1e6, 5e6]
 # Hint: about 10 lines of code expected
 ################################################################################
 
+<<<<<<< HEAD
 for lr in learning_rates:
 	for rs in regularization_strengths:
 		print("calculating: lr=%e,reg=%e"%(lr,rs))
@@ -89,6 +104,10 @@ for lr in learning_rates:
 		if va>best_val:
 			best_val=va
 			best_softmax=ns
+=======
+
+
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 ################################################################################
 #                              END OF YOUR CODE                                #
 ################################################################################
@@ -107,7 +126,11 @@ if best_softmax:
   y_test_pred = best_softmax.predict(X_test)
   test_accuracy = np.mean(y_test == y_test_pred)
   print 'softmax on raw pixels final test set accuracy: %f' % (test_accuracy, )
+<<<<<<< HEAD
   print confusion_matrix(y_test, y_test_pred)
+=======
+
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
   # Visualize the learned weights for each class
 
   theta = best_softmax.theta[1:,:].T # strip out the bias term

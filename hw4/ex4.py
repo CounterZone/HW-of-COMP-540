@@ -19,11 +19,19 @@ X,y = utils.load_mat('data/ex4data1.mat')
 utils.plot_twoclass_data(X,y,'x1', 'x2',['neg','pos'])
 plt.savefig('fig1.pdf')
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 ############################################################################
 #  Part 1: Hinge loss function and gradient                                #
 ############################################################################
 
+<<<<<<< HEAD
 C = 1.0
+=======
+C = 1
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 theta = np.zeros((X.shape[1],))
 J,grad = linear_svm.svm_loss_twoclass(theta,X,y,C)
 
@@ -56,7 +64,11 @@ yy[y == 0] = -1
 # You will change this line to vary C.                                     #
 ############################################################################
 
+<<<<<<< HEAD
 C = 100.0
+=======
+C = 1
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
 ############################################################################
 
@@ -85,7 +97,11 @@ plt.savefig('fig2.pdf')
 
 x1 = np.array([1,2,1])
 x2 = np.array([0,4,-1])
+<<<<<<< HEAD
 sigma = 2.0
+=======
+sigma = 2
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
 print "Guassian kernel value (should be around 0.324652) = ", utils.gaussian_kernel(x1,x2,sigma)
 
@@ -124,15 +140,28 @@ yy[y == 0] = -1
 
 svm = LinearSVM_twoclass()
 svm.theta = np.zeros((KK.shape[1],))
+<<<<<<< HEAD
 C = 1.0
 svm.train(KK,yy,learning_rate=1e-4,C=C,num_iters=20000,verbose=False)
+=======
+<<<<<<< HEAD
+C = 1
+svm.train(KK,yy,learning_rate=1e-4,C=C,num_iters=20000,verbose=True)
+=======
+C = 1.0
+svm.train(KK,yy,learning_rate=1e-4,C=C,num_iters=20000,verbose=False)
+>>>>>>> 90033ce... 3.3 completed3.3 completed3.3 completed
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
 # visualize the boundary
 
 utils.plot_decision_kernel_boundary(X,y,scaler,sigma,svm,'','',['neg','pos'])
 plt.savefig("fig4.pdf")
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 ############################################################################
 #  Part  4: Training SVM with a kernel                                     #
 #  Select hyperparameters C and sigma                                      #
@@ -159,6 +188,7 @@ plt.savefig('fig5.pdf')
 # Xval and yval                                                            #
 ############################################################################
 
+<<<<<<< HEAD
 Cvals = [0.01,0.03,0.1,0.3,1,3,10,30]
 sigma_vals = [0.01,0.03,0.1,0.3,1,3,10,30]
 
@@ -166,6 +196,13 @@ sigma_vals = [0.01,0.03,0.1,0.3,1,3,10,30]
 best_C = 0.01
 best_sigma = 0.01
 '''
+=======
+Cvals = [0.01,0.03,0.1,0.3,10,30]
+sigma_vals = [0.01,0.03,0.1,0.3,10,30]
+
+best_C = 0.01
+best_sigma = 0.01
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
 ############################################################################
 # TODO                                                                     #
@@ -178,6 +215,13 @@ best_sigma = 0.01
 # about 15 lines of code expected to get best_C and best_sigma             #
 # your code should determine best_C and best_sigma                         #
 ############################################################################
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 best_C = None
 best_sigma = None
 results = {}
@@ -211,6 +255,10 @@ for sigma in sigma_vals:
 if(best_C and best_sigma):
         print("*****Problem 3.2******")
         print("Best C = %e Best sigma = %e with validation accuracy = %e"%(best_C,best_sigma,results[best_C,best_sigma]))
+<<<<<<< HEAD
+=======
+>>>>>>> 90033ce... 3.3 completed3.3 completed3.3 completed
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 ############################################################################
 #   end of your code                                                       #
 ############################################################################
@@ -230,4 +278,7 @@ svm.train(KK,yy,learning_rate=1e-4,C=best_C,num_iters=20000,verbose=False)
 
 utils.plot_decision_kernel_boundary(X,y,scaler,best_sigma,svm,'','',['neg','pos'])
 plt.savefig("fig6.pdf")
+<<<<<<< HEAD
 
+=======
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d

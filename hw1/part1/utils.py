@@ -16,10 +16,16 @@ def feature_normalize(X):
 
     ########################################################################
     # TODO: modify the three lines below to return the correct values
+<<<<<<< HEAD
 
     mu = np.dot(np.ones([1,X.shape[0]]),X)/X.shape[0]
     sigma = (np.dot(np.ones([1,X.shape[0]]),(X-np.dot(np.ones([X.shape[0],1]),mu))**2)/X.shape[0])**0.5
     X_norm = (X-np.dot(np.ones([X.shape[0],1]),mu))/np.dot(np.ones([X.shape[0],1]),sigma)
+=======
+    mu = np.zeros((X.shape[1],))
+    sigma = np.ones((X.shape[1],))
+    X_norm = np.zeros(X.shape)
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
   
     ########################################################################
     return X_norm, mu, sigma

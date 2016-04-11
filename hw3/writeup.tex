@@ -308,6 +308,16 @@ A code snippet from \verb|train| method
       loss_history.append(loss)
       curr_loss = np.mean(loss_history[-win_len:])
       if abs(last_loss - curr_loss) < tol:
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+        self.theta-=grad*learning_rate
+        return it, loss_history
+\end{lstlisting}
+\end{small}
+The corresponding script to evaulate batch size, learning rate, regularization parameter is in file \verb|softmax_hw_3_8.py|.
+=======
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
         return it, loss_history
         
       self.theta-=grad*learning_rate
@@ -383,4 +393,8 @@ rock & 0.95 & 0.71 \\
 \end{table}
 
 We see that OVA is not good for the genres disco, hiphop and rock.
+<<<<<<< HEAD
+=======
+>>>>>>> 27db11d... finished report except for 3.8_fmin
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 \end{document}

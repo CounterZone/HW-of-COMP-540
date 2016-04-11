@@ -14,8 +14,14 @@ import scipy.io
 def sigmoid (z):
     sig = np.zeros(z.shape)
     # Your code here
+<<<<<<< HEAD
     sig = 1/(1+np.exp(-1*z))
     # End your ode
+=======
+    
+    # End your ode
+
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
     return sig
 
 ######################################################################################
@@ -28,7 +34,11 @@ def sigmoid (z):
 def log_features(X):
     logf = np.zeros(X.shape)
     # Your code here
+<<<<<<< HEAD
     logf = np.log(X+0.1)
+=======
+    
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
     # End your ode
     return logf
 
@@ -54,7 +64,11 @@ def std_features(X):
 def bin_features(X):
     tX = np.zeros(X.shape)
     # your code here
+<<<<<<< HEAD
     tX = np.array(X>0,dtype=int)
+=======
+
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
     # end your code
     return tX
 
@@ -89,6 +103,7 @@ def select_lambda_crossval(X,y,lambda_low,lambda_high,lambda_step,penalty):
 
     # Your code here
     # Implement the algorithm above.
+<<<<<<< HEAD
     best_accu=0
     kf=cross_validation.KFold(y.shape[0],10)
     l=lambda_low
@@ -111,6 +126,10 @@ def select_lambda_crossval(X,y,lambda_low,lambda_high,lambda_step,penalty):
             best_accu=accu
             best_lambda=l
         l=l+lambda_step
+=======
+
+
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
     # end your code
 
     return best_lambda

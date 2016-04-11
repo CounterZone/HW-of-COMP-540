@@ -71,8 +71,12 @@ class LogisticRegressor:
         # Compute the loss function for unregularized logistic regression        #
         # TODO: 1-2 lines of code expected                                       #
         ##########################################################################
+<<<<<<< HEAD
 	
 	J = -1*np.sum(np.log(utils.sigmoid(np.dot(theta,X.T)))*y+np.log(1-utils.sigmoid(np.dot(theta,X.T)))*(1-y))/m
+=======
+
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
         ###########################################################################
         #                           END OF YOUR CODE                              #
@@ -99,8 +103,12 @@ class LogisticRegressor:
         # regression                                                             #
         # TODO: 1 line of code expected                                          #
         ##########################################################################
+<<<<<<< HEAD
 	
 	grad = np.dot((utils.sigmoid(np.dot(theta,X.T))-y),X)/m
+=======
+
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
         ###########################################################################
         #                           END OF YOUR CODE                              #
@@ -126,8 +134,12 @@ class LogisticRegressor:
         # Compute the predicted outputs for X                                     #
         # TODO: 1 line of code expected                                           #
         ###########################################################################
+<<<<<<< HEAD
 	
 	y_pred = utils.bin_features(utils.sigmoid(np.dot(self.theta,X.T))-0.5)
+=======
+
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
         ###########################################################################
         #                           END OF YOUR CODE                              #
@@ -191,7 +203,11 @@ class RegLogisticRegressor:
         return theta_opt
 
     def loss(self, *args):
+<<<<<<< HEAD
         """d
+=======
+        """
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
         Compute the logistic loss function 
 
 
@@ -213,7 +229,10 @@ class RegLogisticRegressor:
         # TODO: 1-2 lines of code expected                                       #
         ##########################################################################
 
+<<<<<<< HEAD
 	J=-1*np.sum(np.log(utils.sigmoid(np.dot(theta,X.T)))*y+np.log(1-utils.sigmoid(np.dot(theta,X.T)))*(1-y))/m+reg*np.sum(theta[1:]**2)/2/m
+=======
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
         ###########################################################################
         #                           END OF YOUR CODE                              #
@@ -237,19 +256,28 @@ class RegLogisticRegressor:
         theta,X,y,reg = args
         m,dim = X.shape
         grad = np.zeros((dim,))
+<<<<<<< HEAD
 
+=======
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
         ##########################################################################
         # Compute the gradient of the loss function for unregularized logistic   #
         # regression                                                             #
         # TODO: 1 line of code expected                                          #
         ##########################################################################
 
+<<<<<<< HEAD
 	grad = np.dot((utils.sigmoid(np.dot(theta,X.T))-y),X)/m+np.hstack([0,reg*theta[1:]/m])
+=======
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
         ###########################################################################
         #                           END OF YOUR CODE                              #
         ###########################################################################
+<<<<<<< HEAD
 
+=======
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
         return grad
         
 
@@ -273,7 +301,10 @@ class RegLogisticRegressor:
         #                                                                         #
         ###########################################################################
 
+<<<<<<< HEAD
 	y_pred = utils.bin_features(utils.sigmoid(np.dot(self.theta,X.T))-0.5)
+=======
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
         ###########################################################################
         #                           END OF YOUR CODE                              #

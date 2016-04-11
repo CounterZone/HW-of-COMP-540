@@ -67,7 +67,11 @@ plt.savefig('fig7.pdf')
 # =========== Part 3: Learning Curve for Linear Regression ===========#
 #######################################################################
 
+<<<<<<< HEAD
 reg = 0.0
+=======
+reg = 1.0
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 XXval = np.vstack([np.ones((Xval.shape[0],)),Xval]).T
 
 # implement the learning_curve function in utils.py
@@ -117,12 +121,22 @@ XX_poly_val = np.vstack([np.ones((X_poly_val.shape[0],)),X_poly_val.T]).T
 
 reg = 0.0
 reglinear_reg2 = RegularizedLinearReg_SquaredLoss()
+<<<<<<< HEAD
 theta_opt0 = reglinear_reg2.train(XX_poly,y,reg=reg,num_iters=10000)
 print 'Theta at lambda = 0 is ', theta_opt0
 
 # plot data and training fit for the 6th order polynomial and save it in fig9.pdf
 
 plot_utils.plot_fit(X,y,np.min(X),np.max(X),mu,sigma,theta_opt0,p,'Change in water level (x)','Water flowing out of dam (y)','Polynomial Regression fit with lambda = 0 and polynomial features of degree = ' + str(p))
+=======
+theta_opt1 = reglinear_reg1.train(XX_poly,y,reg=reg,num_iters=10000)
+print 'Theta at lambda = 0 is ', theta_opt1
+
+
+# plot data and training fit for the 6th order polynomial and save it in fig9.pdf
+
+plot_utils.plot_fit(X,y,np.min(X),np.max(X),mu,sigma,theta_opt1,p,'Change in water level (x)','Water flowing out of dam (y)','Polynomial Regression fit with lambda = 0 and polynomial features of degree = ' + str(p))
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
 plt.savefig('fig9.pdf')
 
@@ -133,6 +147,7 @@ error_train,error_val = utils.learning_curve(XX_poly,y,XX_poly_val,yval,reg)
 plot_utils.plot_learning_curve(error_train,error_val,reg)
 plt.savefig('fig10.pdf')
 
+<<<<<<< HEAD
 #lambda=1 for problem3.2.A4
 reg = 1.0
 theta_opt1 = reglinear_reg2.train(XX_poly,y,reg=reg,num_iters=10000)
@@ -189,6 +204,8 @@ error_train,error_val = utils.learning_curve(XX_poly,y,XX_poly_val,yval,reg)
 plot_utils.plot_learning_curve(error_train,error_val,reg)
 plt.savefig('fig10_reg100.pdf')
 
+=======
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
 
 #######################################################################
 ## =========== Part 6: Averaged learning curve         ===============#
@@ -215,6 +232,7 @@ plt.savefig('fig11.pdf')
 reg_vec, error_train, error_val = utils.validation_curve(XX_poly,y,XX_poly_val,yval)
 plot_utils.plot_lambda_selection(reg_vec,error_train,error_val)
 plt.savefig('fig12.pdf')
+<<<<<<< HEAD
 
 #Problem 3.2.A6
 # lambda = 1.0 gives the best model (from fig12.pdf)
@@ -224,3 +242,5 @@ theta_opt = reglinear_reg3.train(XX_poly,y,reg,num_iters=1000)
 error_test = reglinear_reg3.loss(theta_opt,XX_poly_test,ytest,0.0)
 print 'Theta at lambda = 1.0 (problem3.2.A6) is ', theta_opt
 print 'Error at lambda = 1.0 (problem3.2.A6) is ', error_test
+=======
+>>>>>>> 89dd6a53aa0ff700b713b57c5d8d001424557b1d
