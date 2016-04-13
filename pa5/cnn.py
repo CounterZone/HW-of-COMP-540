@@ -3,7 +3,7 @@ import numpy as np
 from layers import *
 from fast_layers import *
 from layer_utils import *
-
+import scipy.sparse
 
 class ThreeLayerConvNet(object):
   """
@@ -48,9 +48,13 @@ class ThreeLayerConvNet(object):
     # 'theta3_0' for the weights and biases of the output affine layer.        #
     ############################################################################
     # about 15 lines of code
+    self.params["theta1"]=np.random.normal(0,weight_scale,[num_filters,input_dim[0],filter_size,filter_size])
+    self.params["theta1_0"]=np.zeros([num_filters])
+    self.params["theta2"]=np.random.normal(0,weight_scale,[num_filters*input_dim[1]*input_dim[2]/4,hidden_dim])
+    self.params["theta2_0"]=np.zeros([1,hidden_dim])
+    self.params["theta3"]=np.random.normal(0,weight_scale,[hidden_dim,num_classes])
+    self.params["theta3_0"]=np.zeros([1,num_classes])
 
-
-    pass
     ############################################################################
     #                             END OF YOUR CODE                             #
     ############################################################################
@@ -83,7 +87,13 @@ class ThreeLayerConvNet(object):
     # variable.                                                                #
     ############################################################################
     # about 3 lines of code (use the helper functions in layer_utils.py)
+    
+    o1,c1=conv_relu_pool_forward(X, theta1, theta1_0, conv_param, pool_param)
 
+    o2,c2=affine_relu_forward(o1, theta2, theta2_0)
+
+    scores,c3=affine_forward(o2, theta3, theta3_0)
+    
     ############################################################################
     #                             END OF YOUR CODE                             #
     ############################################################################
@@ -99,9 +109,18 @@ class ThreeLayerConvNet(object):
     # for self.params[k]. Don't forget to add L2 regularization!               #
     ############################################################################
     # about 12 lines of code.
-
-
-    pass
+    output=scores
+    ypre=np.exp(output)/(np.exp(output).sum(1).reshape(output.shape[0],1).dot(np.ones([1,output.shape[1]])))
+    my=scipy.sparse.csr_matrix((np.ones(y.shape),y,np.arange(y.shape[0]+1)),shape=ypre.shape).todense()
+    loss=(-1.0*np.sum(np.multiply(my,np.log(ypre)))/len(y)+(self.reg/2)*(np.sum(np.array(theta1)**2)+np.sum(np.array(theta2)**2)+np.sum(np.array(theta3)**2)))
+    grad3=(-1.0*((my-ypre)))/len(y)
+    dx3,grads['theta3'],grads["theta3_0"]=affine_backward(grad3,c3)
+    dx2,grads['theta2'],grads["theta2_0"]=affine_relu_backward(dx3, c2)
+    dx1,grads['theta1'],grads["theta1_0"]=conv_relu_pool_backward(dx2, c1)
+    grads['theta1']+=self.reg*theta1
+    grads['theta2']+=self.reg*theta2
+    grads['theta3']+=self.reg*theta3
+    
     ############################################################################
     #                             END OF YOUR CODE                             #
     ############################################################################

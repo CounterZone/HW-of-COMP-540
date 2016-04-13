@@ -60,21 +60,21 @@ def sgd_momentum(theta, dtheta, config=None):
   config.setdefault('momentum', 0.9)
   v = config.get('velocity', np.zeros_like(theta))
   
-  next_theta = None
   #############################################################################
   # TODO: Implement the momentum update formula. Store the updated value in   #
   # the next_theta variable. You should also use and update the velocity v.   #
   #############################################################################
   # 2 lines of code expected
 
-
+  v=config["momentum"]*v-config['learning_rate']*dtheta
+  theta += v
   pass
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
   config['velocity'] = v
 
-  return next_theta, config
+  return theta, config
 
 
 
@@ -96,20 +96,19 @@ def rmsprop(theta, dtheta, config=None):
   config.setdefault('epsilon', 1e-8)
   config.setdefault('cache', np.zeros_like(theta))
 
-  next_theta = None
+
   #############################################################################
   # TODO: Implement the RMSprop update formula, storing the next value of     #
   # theta in the next_theta variable. Don't forget to update cache value      #  
   # stored in config['cache'].                                                #
   #############################################################################
   # 2 lines of code expected
-
-
-  pass
+  config['cache']= config['cache']*config['decay_rate']+(1-config['decay_rate'])*np.array(dtheta)*np.array(dtheta)
+  theta-=config['learning_rate']*dtheta/(np.array(config["cache"])**0.5+config["epsilon"])
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
-  return next_theta, config
+  return theta, config
 
 
 def adam(theta, dtheta, config=None):
@@ -134,13 +133,12 @@ def adam(theta, dtheta, config=None):
   config.setdefault('m', np.zeros_like(theta))
   config.setdefault('v', np.zeros_like(theta))
   config.setdefault('t', 0)
-  
   config['m'] = config['beta1']*config['m'] + (1-config['beta1'])*dtheta
-  config['v'] = config['beta2']*config['v'] + (1-config['beta2'])*(dtheta**2)
+  config['v'] = config['beta2']*config['v'] + (1-config['beta2'])*(np.array(dtheta)**2)
   config['t'] += 1
 
   mt_hat = config['m'] / (1 - (config['beta1'])**config['t'])
   vt_hat = config['v'] / (1 - (config['beta2'])**config['t'])
-  next_theta = theta - config['learning_rate'] * mt_hat / (np.sqrt(vt_hat + config['epsilon']))
+  theta -=config['learning_rate'] * mt_hat / (np.sqrt(vt_hat + config['epsilon']))
   
-  return next_theta, config
+  return theta, config

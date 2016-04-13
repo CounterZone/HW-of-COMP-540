@@ -2,7 +2,7 @@ import numpy as np
 
 from layers import *
 from layer_utils import *
-
+import scipy.sparse
 
 class TwoLayerNet(object):
   """
@@ -46,7 +46,12 @@ class TwoLayerNet(object):
     ############################################################################
     # 4 lines of code expected
 
-    pass
+    self.params['theta1']=np.random.normal(0,weight_scale,[input_dim,hidden_dim])
+    self.params['theta1_0']=np.zeros([1,hidden_dim])
+    self.params['theta2']=np.random.normal(0,weight_scale,[hidden_dim,num_classes])
+    self.params['theta2_0']=np.zeros([1,num_classes])
+    
+
     ############################################################################
     #                             END OF YOUR CODE                             #
     ############################################################################
@@ -78,8 +83,10 @@ class TwoLayerNet(object):
     ############################################################################
     # Hint: unpack the weight parameters from self.params
     # 3 lines of code expected
+    theta1,theta1_0,theta2,theta2_0=self.params['theta1'],self.params['theta1_0'],self.params['theta2'],self.params['theta2_0']
+    out1,c1=affine_relu_forward(X,theta1,theta1_0)
+    output,c2=affine_forward(out1,theta2,theta2_0)
 
-    pass
     ############################################################################
     #                             END OF YOUR CODE                             #
     ############################################################################
@@ -100,8 +107,14 @@ class TwoLayerNet(object):
     # of 0.5 to simplify the expression for the gradient.                      #
     ############################################################################
     # 8 lines of code expected
-
-    pass
+    ypre=np.exp(output)/(np.exp(output).sum(1).reshape(output.shape[0],1).dot(np.ones([1,output.shape[1]])))
+    my=scipy.sparse.csr_matrix((np.ones(y.shape),y,np.arange(y.shape[0]+1)),shape=ypre.shape).todense()
+    loss=(-1.0*np.sum(np.multiply(my,np.log(ypre)))/len(y)+(self.reg/2)*(np.sum(np.array(theta1)**2)+np.sum(np.array(theta2)**2)))
+    grad2=(-1.0*((my-ypre)))/len(y)
+    dx2,grads['theta2'],grads["theta2_0"]=affine_backward(grad2,c2)
+    dx1,grads['theta1'],grads["theta1_0"]=affine_relu_backward(dx2, c1)
+    grads['theta1']+=self.reg*theta1
+    grads['theta2']+=self.reg*theta2
     ############################################################################
     #                             END OF YOUR CODE                             #
     ############################################################################
@@ -156,8 +169,13 @@ class FullyConnectedNet(object):
     # initialized to zero.                                                     #
     ############################################################################
     # 7 lines of code expected
-
-    pass
+    self.params['theta1']=np.random.normal(0,weight_scale,[input_dim,hidden_dims[0]])
+    self.params['theta1_0']=np.zeros([1,hidden_dims[0]])
+    for i in range(2,self.num_layers):
+	self.params['theta%d'%i]=np.random.normal(0,weight_scale,[hidden_dims[i-2],hidden_dims[i-1]])
+	self.params["theta%d_0"%i]=np.zeros([1,hidden_dims[i-1]])
+    self.params['theta%d'%self.num_layers]=np.random.normal(0,weight_scale,[hidden_dims[-1],num_classes])
+    self.params["theta%d_0"%self.num_layers]=np.zeros([1,num_classes])
     ############################################################################
     #                             END OF YOUR CODE                             #
     ############################################################################
@@ -183,8 +201,12 @@ class FullyConnectedNet(object):
     #                                                                          #
     ############################################################################
     # 6 lines of code expected.
-
-    pass
+    out=[]
+    out.append(affine_relu_forward(X,self.params['theta1'],self.params['theta1_0']))
+    for i in range(2,self.num_layers):
+	out.append(affine_relu_forward(out[-1][0],self.params['theta%d'%i],self.params['theta%d_0'%i]))
+    out.append(affine_forward(out[-1][0],self.params['theta%d'%self.num_layers],self.params['theta%d_0'%self.num_layers]))
+    output=out[-1][0]
     ############################################################################
     #                             END OF YOUR CODE                             #
     ############################################################################
@@ -206,7 +228,16 @@ class FullyConnectedNet(object):
     # of 0.5 to simplify the expression for the gradient.                      #
     ############################################################################
     # 10-12 lines of code expected
-
+    ypre=np.exp(out[-1][0])/(np.exp(out[-1][0]).sum(1).reshape(out[-1][0].shape[0],1).dot(np.ones([1,out[-1][0].shape[1]])))
+    my=scipy.sparse.csr_matrix((np.ones(y.shape),y,np.arange(y.shape[0]+1)),shape=ypre.shape).todense()
+    loss=-1.0*np.sum(np.multiply(my,np.log(ypre)))/len(y)+(self.reg/2)*np.sum(np.array(self.params['theta%d'%(self.num_layers)])**2)
+    grad=(-1.0*((my-ypre)))/len(y)
+    dx,grads['theta%d'%self.num_layers],grads["theta%d_0"%self.num_layers]=affine_backward(grad,out[-1][1])
+    grads['theta%d'%self.num_layers]+=self.reg*(self.params['theta%d'%(self.num_layers)])
+    for i in range(2,self.num_layers+1):
+	dx,grads['theta%d'%(self.num_layers-i+1)],grads['theta%d_0'%(self.num_layers-i+1)]=affine_relu_backward(dx, out[-i][1])
+	loss+=(self.reg/2)*np.sum(np.array(self.params['theta%d'%(self.num_layers-i+1)])**2)
+        grads['theta%d'%(self.num_layers-i+1)]+=self.reg*(self.params['theta%d'%(self.num_layers-i+1)])
 
 
     pass

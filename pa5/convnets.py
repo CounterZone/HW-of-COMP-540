@@ -376,7 +376,7 @@ if model.params != {}:
 # result in very high training accuracy and comparatively low validation          #
 # accuracy.                                                                       #
 ###################################################################################
-
+'''
 num_train = 100
 small_data = {
   'X_train': data['X_train'][:num_train],
@@ -444,10 +444,30 @@ if model.params != {}:
   plt.axis('off')
   plt.gcf().set_size_inches(5, 5)
   plt.show()
-
+'''
 # Problem 3.2.6
 ###################################################################################
 # Decrease the size of the filter and increase number of filters                  #
 # The aim is to achieve > 50% validation accuracy                                 #
 ###################################################################################
 # TODO: build your model, set up a solver, train the model, visualize the weights
+
+model = cnn.ThreeLayerConvNet(weight_scale=0.001, hidden_dim=500, reg=0.005,filter_size=3,num_filters=64)
+
+if model.params != {}:
+  asolver = solver.Solver(model, data,
+                num_epochs=5, batch_size=50,
+                update_rule='adam',
+                optim_config={
+                  'learning_rate': 1e-3,
+                },
+                verbose=True, print_every=10)
+  asolver.train()
+from vis_utils import visualize_grid
+
+if model.params != {}:
+  grid = visualize_grid(model.params['theta1'].transpose(0, 2, 3, 1))
+  plt.imshow(grid.astype('uint8'))
+  plt.axis('off')
+  plt.gcf().set_size_inches(5, 5)
+  plt.show()

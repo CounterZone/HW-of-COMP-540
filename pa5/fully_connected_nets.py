@@ -39,7 +39,7 @@ data = utils.get_CIFAR10_data()
 for k, v in data.iteritems():
   print '%s: ' % k, v.shape
 
-
+'''
 # Problem 3.1.1
 ###################################################################################
 #   Affine layer: forward.                                                        #
@@ -272,6 +272,7 @@ model.reg = 1.0
 loss, grads = model.loss(X, y)
 if loss > 0:
   correct_loss = 26.5948426952
+  print(loss)
   assert abs(loss - correct_loss) < 1e-10, 'Problem with regularization loss'
 
 for reg in [0.0, 0.7]:
@@ -302,8 +303,17 @@ sgd_solver = None
 # TODO: Use a Solver instance to train a TwoLayerNet that achieves at least       #
 # 50% accuracy on the validation set.                                             #
 ###################################################################################
+sgd_solver=solver.Solver(model,data,update_rule='sgd',
+                  optim_config={
+                    'learning_rate': 1e-3,
+                  },
+                  lr_decay=0.95,
+                  num_epochs=10, batch_size=100,
+                  print_every=100)
+sgd_solver.train()
 
-pass
+
+
 ##################################################################################
 #                             END OF YOUR CODE                                   #
 ##################################################################################
@@ -384,9 +394,9 @@ small_data = {
 # TODO: tweak the values of these two parameters
 
 weight_scale = 1e-2
-learning_rate = 1e-4
+learning_rate = 1e-2
 
-model = fc_net.FullyConnectedNet([100, 100],
+model = fc_net.FullyConnectedNet([100,100],
               weight_scale=weight_scale, dtype=np.float64)
 
 if model.params != {}:
@@ -423,8 +433,8 @@ small_data = {
 }
 
 
-learning_rate = 1e-3
-weight_scale = 1e-5
+learning_rate = 1e-2
+weight_scale = 5e-2
 
 
 model = fc_net.FullyConnectedNet([100, 100, 100, 100],
@@ -488,7 +498,7 @@ expected_velocity = np.asarray([
   [ 0.68217895,  0.69633684,  0.71049474,  0.72465263,  0.73881053],
   [ 0.75296842,  0.76712632,  0.78128421,  0.79544211,  0.8096    ]])
 
-if next_theta:
+if next_theta is not None:
   print 'next_theta error: ', rel_error(next_theta, expected_next_theta)
   print 'velocity error: ', rel_error(expected_velocity, config['velocity'])
 
@@ -585,7 +595,7 @@ expected_cache = np.asarray([
   [ 0.75037008,  0.7659518,   0.78158892,  0.79728144,  0.81302936],
   [ 0.82883269,  0.84469141,  0.86060554,  0.87657507,  0.8926    ]])
 
-if next_theta:
+if next_theta is not None:
   print 'next_theta error: ', rel_error(expected_next_theta, next_theta)
   print 'cache error: ', rel_error(expected_cache, config['cache'])
 
@@ -678,7 +688,7 @@ for i in [1, 2, 3]:
 plt.gcf().set_size_inches(15, 15)
 plt.show()
 
-
+'''
 # Problem 3.1.12
 ###################################################################################
 # Tune your hyperparameters                                                       #
@@ -715,14 +725,15 @@ from vis_utils import show_net_weights
 # set up a model, train it and then visualize the first level weights
 # you will need to play wih these parameters to get > 50% on validation set
 
-# model = fc_net.FullyConnectedNet()
+model = fc_net.FullyConnectedNet(hidden_dims=[100,100,100],reg=0.01)
 
-# asolver = solver.Solver(model, data,
-#                  num_epochs=5, batch_size=100,
-#                  update_rule='adam',
-#                  optim_config={
-#                    'learning_rate': 1e-3,
-#                  },
-#                  verbose=True)
-# asolver.train()
-# show_net_weights(model)
+asolver = solver.Solver(model, data,
+                 num_epochs=15, batch_size=100,
+                 update_rule='adam',
+                 optim_config={
+                   'learning_rate': 5e-4,
+                 },
+                 verbose=True)
+asolver.train()
+show_net_weights(model)
+print("best validation accurancy: %f"%asolver.best_val_acc)

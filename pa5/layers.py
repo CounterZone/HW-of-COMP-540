@@ -25,8 +25,9 @@ def affine_forward(x, theta, theta_0):
   # will need to reshape the input into rows.                                 #
   #############################################################################
   # 2 lines of code expected
+
   X=x.reshape(x.shape[0],theta.shape[0])
-  out=X.dot(theta)+np.ones([x.shape[0],1]).dot(theta_0.reshape(1,theta_0.shape[0]))
+  out=X.dot(theta)+np.ones([x.shape[0],1]).dot(theta_0.reshape(1,theta_0.size))
   pass
   #############################################################################
   #                             END OF YOUR CODE                              #
@@ -57,8 +58,11 @@ def affine_backward(dout, cache):
   #############################################################################
   # Hint: do not forget to reshape x into (m,d) form
   # 4-5 lines of code expected
+  X=x.reshape(x.shape[0],theta.shape[0])
+  dx=np.array(dout.dot(theta.T)).reshape(x.shape)
+  dtheta=X.T.dot(dout)
+  dtheta_0=np.ones([1,x.shape[0]]).dot(dout)
   
-  pass
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
@@ -81,6 +85,7 @@ def relu_forward(x):
   # TODO: Implement the ReLU forward pass.                                    #
   #############################################################################
   # 1-2 lines of code expected.
+  out=np.multiply(x,(x>0))
 
   pass
   #############################################################################
@@ -107,7 +112,7 @@ def relu_backward(dout, cache):
   #############################################################################
   # 1-2 lines of code expected. Hint: use np.where
 
-  pass
+  dx=np.multiply(dout,(x>0))
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
@@ -145,8 +150,20 @@ def conv_forward_naive(x, theta, theta0, conv_param):
   # Hint: you can use the function np.pad for padding.                        #
   #############################################################################
   # 14 lines of code expected
+  m,C,H,W=x.shape
+  K,C,HH,WW=theta.shape
+  Hp= 1 + (H + 2 * conv_param['pad'] - HH) / conv_param['stride']
+  Wp= 1 + (W + 2 * conv_param['pad'] - WW) / conv_param['stride']
+  t1=np.zeros([m,C,H,conv_param['pad']])
+  XX=np.concatenate((t1,x,t1),axis=3)
+  t1=np.zeros([m,C,conv_param['pad'],W+2*conv_param['pad']])
+  XX=np.concatenate((t1,XX,t1),axis=2)
+  out=np.zeros([m,K,Hp,Wp])
+  for i in range(Hp):
+	for j in range(Wp):
+			out[:,:,i,j]=XX[:,:,i*conv_param['stride']:i*conv_param['stride']+HH,j*conv_param['stride']:j*conv_param['stride']+WW].reshape([m,C*HH*WW]).dot(np.matrix(theta.reshape([K,C*HH*WW])).T)+np.ones([m,1])*theta0.reshape([1,K])
+		
 
-  pass
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
@@ -162,6 +179,12 @@ def conv_backward_naive(dout, cache):
   - dout: Upstream derivatives.
   - cache: A tuple of (x, w, b, conv_param) as in conv_forward_naive
 
+
+- x: Input data of shape (m, C, H, W)
+  - theta: Filter weights of shape (K, C, HH, WW)
+  - theta0: Biases, of shape (K,)
+
+
   Returns a tuple of:
   - dx: Gradient with respect to x
   - dtheta: Gradient with respect to theta
@@ -173,7 +196,23 @@ def conv_backward_naive(dout, cache):
   #############################################################################
   # 20-22 lines of code expected
 
-
+  x, theta, theta0, conv_param=cache 
+  m,K,Hp,Wp=dout.shape
+  m,C,H,W=x.shape
+  K,C,HH,WW=theta.shape
+  t1=np.zeros([m,C,H,conv_param['pad']])
+  XX=np.concatenate((t1,x,t1),axis=3)
+  t1=np.zeros([m,C,conv_param['pad'],W+2*conv_param['pad']])
+  XX=np.concatenate((t1,XX,t1),axis=2)
+  dX=np.zeros(XX.shape)
+  dtheta=np.zeros(theta.shape)
+  dtheta0=dout.sum(0).sum(1).sum(1)
+  for i in range(Hp):
+	for j in range(Wp):
+		dX[:,:,i*conv_param['stride']:i*conv_param['stride']+HH,j*conv_param['stride']:j*conv_param['stride']+WW]+=(dout[:,:,i,j].dot(theta.reshape(K,C*HH*WW))).reshape(m,C,HH,WW)
+		
+		dtheta+=np.array(np.matrix(dout[:,:,i,j]).T.dot(XX[:,:,i*conv_param['stride']:i*conv_param['stride']+HH,j*conv_param['stride']:j*conv_param['stride']+WW].reshape([m,C*HH*WW]))).reshape([K,C,HH,WW])
+  dx=dX[:,:,conv_param['pad']:-conv_param['pad'],conv_param['pad']:-conv_param['pad']]
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
@@ -200,8 +239,16 @@ def max_pool_forward_naive(x, pool_param):
   # TODO: Implement the max pooling forward pass                              #
   #############################################################################
   # 12-13 lines of code expected
-
-  pass
+  
+  m,C,H,W=x.shape
+  HH,WW,S=pool_param["pool_height"],pool_param["pool_width"],pool_param["stride"]
+  Hp= 1 + (H - HH) / S
+  Wp= 1 + (W - WW) / S
+  out=np.zeros([m,C,Hp,Wp])
+  for i in range(Hp):
+	for j in range(Wp):
+			out[:,:,i,j]=np.max(np.max(x[:,:,i*S:i*S+HH,j*S:j*S+WW],2),2)
+  
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
@@ -225,8 +272,18 @@ def max_pool_backward_naive(dout, cache):
   # TODO: Implement the max pooling backward pass                             #
   #############################################################################
   # 15 lines of code expected
+  x,pool_param=cache
+  HH,WW,S=pool_param["pool_height"],pool_param["pool_width"],pool_param["stride"]
+  m,C,H,W=x.shape
+  m,C,Hp,Wp=dout.shape
+  dx=np.zeros(x.shape)
+  for i in range(Hp):
+	for j in range(Wp):
+		for c in range(C):
+			for mm in range(m):
+				ii=np.argmax(x[mm,c,i*S:i*S+HH,j*S:j*S+WW])%WW
+				dx[mm,c,(np.argmax(x[mm,c,i*S:i*S+HH,j*S:j*S+WW])-ii)/HH+i*S,ii+j*S]+=dout[mm,c,i,j]
 
-  pass
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
