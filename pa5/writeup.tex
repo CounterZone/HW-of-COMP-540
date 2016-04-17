@@ -58,7 +58,7 @@ Simplifying, we get $\epsilon_{bag}(x) = \frac{1}{L}\sum\limits_{l=1}^L \epsilon
 	  E_{bag} &= E_X\left[\epsilon_{bag}(x)^2\right] \\
 	          &= \frac{1}{L^2}E_X\left[\left(\sum_{l=1}^L \epsilon_l(x)\right)^2\right] \\
 			  &= \frac{1}{L^2}E_X\left[\sum_{l=1}^L \epsilon_l^2(x) + \sum_{\substack{1\leq i,j\leq L \\ i \neq j}}\epsilon_i(x)\epsilon_i(x) \right] \\
-			  &= \frac{1}{L^2}E_X\left[\sum\_{l=1}^L \epsilon_l^2(x)\right]+ \frac{1}{L^2}E_X\left[\sum_{\substack{1\leq i,j\leq L \\ i \neq j}}\epsilon_i(x)\epsilon_j(x) \right] \\
+			  &= \frac{1}{L^2}E_X\left[\sum_{l=1}^L \epsilon_l^2(x)\right]+ \frac{1}{L^2}E_X\left[\sum_{\substack{1\leq i,j\leq L \\ i \neq j}}\epsilon_i(x)\epsilon_j(x) \right] \\
 			  &= \frac{1}{L^2}E_X\left[\sum_{l=1}^L \epsilon_l^2(x)\right]+ \frac{1}{L^2}\sum_{\substack{1\leq i,j\leq L \\ i \neq j}}E_X\left[\epsilon_i(x)\epsilon_j(x) \right] \\
 			  &= \frac{1}{L^2}E_X\left[\sum_{l=1}^L \epsilon_l^2(x)\right] \quad \text{since $E_X\left[\epsilon_i(x)\epsilon_j(x)\right]=0$ for $i \neq j$} \\
 			  &= \frac{1}{L^2} \sum_{l=1}^L E_X\left[ \epsilon_l^2(x)\right] \\
