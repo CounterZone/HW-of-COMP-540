@@ -76,7 +76,7 @@ Simplifying, we get $\epsilon_{bag}(x) = \frac{1}{L}\sum\limits_{l=1}^L \epsilon
   \begin{split}
 	  E_{bag} &= E_X\left[\epsilon_{bag}(x)^2\right] \\
 	          &= E_X\left[\left(\sum_{l=1}^L \frac{\epsilon_l(x)}{L}\right)^2\right] \\
-			  &\leq E_X\left[\sum_{l=1}^L \frac{\epsilon_l^2(x)}{L}\right] \text{using Jensen's inequality for $\lambda_i = \frac{1}{L}$; and for random variables $0\leq U\leq V$ $\implies E[U] \leq E[V]$ } \\
+			  &\leq E_X\left[\sum_{l=1}^L \frac{\epsilon_l^2(x)}{L}\right] \text{using Jensen's ineq. for $\lambda_i = \frac{1}{L}$; and for random variables $0\leq U\leq V$ $\implies E_p[U] \leq E_p[V]$ } \\
 			  &= \frac{1}{L}\sum_{l=1}^L E_X\left[ \epsilon_l^2(x)\right] \\
 			  &= E_{avg}
   \end{split}
@@ -124,7 +124,7 @@ dx error:  1.94653644744e-10\\
 dtheta error:  3.01172010229e-10\\
 dtheta\_0 error:  3.275617042e-12\\
 
-Testing svm\_loss:\\
+\noindent Testing svm\_loss:\\
 loss: (should be around 9):  9.00075514465\\
 dx error (should be around 1e-9):  1.40215660067e-09\\
 }
@@ -411,18 +411,52 @@ theta3\_0 max relative error: 1.805620e-09\\
 }
 \begin{figure}[H]
 \centering
-\includegraphics[width=1.0\linewidth]{./figure_3_2_5}
+\includegraphics[width=.5\linewidth]{./figure_3_2_5}
 \caption{testing CNN: overfit small data}
 \label{fig:3_2_5}
 \end{figure}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=1.0\linewidth]{./figure_3_2_5b}
-\caption{testing CNN: visualizing first layer covolutional filters}
-\label{fig:3_2_5}
-\end{figure}
+
 
 \subsubsection{Train the CNN on the CIFAR-10 data}
+{\footnotesize
+Training a three-layer convolutional network with hidden dimension of 500 for one epoch.\\
+(Epoch 0 / 1) train acc: 0.083000; val\_acc: 0.119000\\
+(Epoch 1 / 1) train acc: 0.476000; val\_acc: 0.481000\\
+}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.0\linewidth]{./figure_3_2_6}
+\caption{visualizing first layer covolutional filters. Epochs=2, $0.4<\text{val\_accuracy}<0.5$}
+\label{fig:3_2_6}
+\end{figure}
+
+{\footnotesize
+To improve validation accuracy $\geq 50\%$; we arrived at these parameters
+\begin{itemize}
+	\item num\_epochs=5
+	\item batch\_size=50
+	\item update\_rule='adam',
+    \item 'learning\_rate': 1e-3
+\end{itemize}
+
+\vdots
+\noindent
+(Epoch 0 / 5) train acc: 0.128000; val\_acc: 0.097000\\
+(Epoch 1 / 5) train acc: 0.527000; val\_acc: 0.527000\\
+(Epoch 2 / 5) train acc: 0.572000; val\_acc: 0.529000\\
+(Epoch 3 / 5) train acc: 0.594000; val\_acc: 0.552000\\
+(Epoch 4 / 5) train acc: 0.629000; val\_acc: 0.574000\\
+(Epoch 5 / 5) train acc: 0.611000; val\_acc: 0.576000\\
+}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.0\linewidth]{./figure_3_2_6b}
+\caption{visualizing first layer covolutional filters. $\text{val\_accuracy}>0.5$}
+\label{fig:3_2_6b}
+\end{figure}
 
 \end{document}
