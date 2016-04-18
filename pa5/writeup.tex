@@ -10,7 +10,7 @@
 
 \begin{document}
 \title{Solution to Homework 5}
-\author{Shoeb Mohammed and Zhuo Chen}
+\author{Zhuo Chen and Shoeb Mohammed}
 \maketitle
 
 \newcommand{\QEDA}{\hfill\ensuremath{\blacksquare}}
@@ -340,7 +340,88 @@ difference:  4.16666651573e-08\\
 Testing max\_pool\_backward\_naive function:\\
 dx error:  1.89289002555e-11\\
 }
+
+\subsubsection*{Fast layers}
+{\footnotesize
+Testing conv\_forward\_fast:\\
+Naive: 0.186149s\\
+Fast: 0.047950s\\
+Speedup: 3.882143x\\
+Difference:  1.08780209978e-12\\
+\\
+Testing conv\_backward\_fast:\\
+Naive: 0.051805s\\
+Fast: 0.018498s\\
+Speedup: 2.800583x\\
+dx difference:  2.22406937467e-12\\
+dtheta difference:  1.01018341604e-13\\
+dtheta0 difference:  1.82671908726e-15\\
+\\
+Testing pool\_forward\_fast:\\
+Naive: 0.022964s\\
+fast: 0.005683s\\
+speedup: 4.040863x\\
+difference:  0.0\\
+\\
+Testing pool\_backward\_fast:\\
+Naive: 0.920883s\\
+speedup: 38.093981x\\
+dx difference:  0.0\\
+}
+
+\subsubsection*{Convolutional sandwich layers}
+{\footnotesize
+Testing conv\_relu\_pool\\
+dx error:  1.61462396734e-07\\
+dtheta error:  3.47841604703e-10\\
+dtheta0 error:  5.0140326449e-11\\
+\\
+Testing conv\_relu:\\
+dx error:  6.41173584371e-09\\
+dtheta error:  1.14601136903e-09\\
+dtheta0 error:  1.85216131307e-10\\
+}
+
 \subsubsection{Three layer convolutional neural network}
+
+\subsubsection*{Testing the CNN: loss computation}
+{\footnotesize
+Initial loss (no regularization):  2.30258719511\\
+Initial loss (with regularization):  2.50906848795\\
+}
+
+\subsubsection*{Testing the CNN: gradient check}
+{\footnotesize
+theta1 max relative error: 9.317318e-03\\
+theta1\_0 max relative error: 1.084071e-05\\
+theta2 max relative error: 2.227715e-02\\
+theta2\_0 max relative error: 9.350040e-08\\
+theta3 max relative error: 5.010592e-05\\
+theta3\_0 max relative error: 1.805620e-09\\
+}
+\subsubsection*{Testing the CNN: overfit small data}
+
+{\footnotesize
+\vdots
+(Iteration 18 / 20) loss: 0.617444\\
+(Epoch 9 / 10) train acc: 0.830000; val\_acc: 0.212000\\
+(Iteration 19 / 20) loss: 0.580641\\
+(Iteration 20 / 20) loss: 0.491107\\
+(Epoch 10 / 10) train acc: 0.880000; val\_acc: 0.221000\\
+}
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.0\linewidth]{./figure_3_2_5}
+\caption{testing CNN: overfit small data}
+\label{fig:3_2_5}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.0\linewidth]{./figure_3_2_5b}
+\caption{testing CNN: visualizing first layer covolutional filters}
+\label{fig:3_2_5}
+\end{figure}
 
 \subsubsection{Train the CNN on the CIFAR-10 data}
 
